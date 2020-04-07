@@ -101,10 +101,52 @@ export const constantRoutes = [
         meta: { title: '商品列表', icon: 'list' }
       },
       {
+        path: 'edit/:id(\\d+)',
+        component: () => import('@/views/product/edit'),
+        name: 'ProductEdit',
+        meta: { title: '编辑商品', noCache: true, activeMenu: '/product/list' },
+        hidden: true
+      },
+      {
         path: 'create',
         component: () => import('@/views/product/create'),
         name: 'ProductCreate',
         meta: { title: '商品添加', icon: 'edit' }
+      },
+      {
+        path: 'info/:id(\\d+)',
+        component: () => import('@/views/product/manage/info'),
+        name: 'ProductManage',
+        meta: { title: '产品管理', noCache: true, activeMenu: '/product/info' },
+        hidden: true
+      },
+      {
+        path: 'attribute',
+        component: () => import('@/views/product/attribute/index'), // Parent router-view
+        name: 'ProductAttribute',
+        meta: { title: '商品规格属性', icon: 'size' },
+        redirect: '/product/attribute/index',
+        children: [
+          {
+            path: 'list',
+            component: () => import('@/views/product/attribute/list'),
+            name: 'ProductAttributeList',
+            meta: { title: '属性列表' }
+          },
+          {
+            path: 'add',
+            component: () => import('@/views/product/attribute/add'),
+            name: 'ProductAttributeAdd',
+            meta: { title: '添加属性' }
+          },
+          {
+            path: 'edit/:id(\\d+)',
+            component: () => import('@/views/product/attribute/edit'),
+            name: 'ProductAttributeEdit',
+            meta: { title: '编辑属性', noCache: true, activeMenu: '/product/attribute/edit' },
+            hidden: true
+          }
+        ]
       }
     ]
   },
@@ -207,19 +249,6 @@ export const asyncRoutes = [
       }
     ]
   },
-
-  // {
-  //   path: '/tab',
-  //   component: Layout,
-  //   children: [
-  //     {
-  //       path: 'index',
-  //       component: () => import('@/views/tab/index'),
-  //       name: 'Tab',
-  //       meta: { title: 'Tab', icon: 'tab' }
-  //     }
-  //   ]
-  // },
 
   {
     path: '/error',

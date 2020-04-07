@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%">
+    <el-table v-loading="isLoading" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column align="center" label="ID" width="80">
         <template slot-scope="scope">
           <span>{{ scope.row.id }}</span>
@@ -15,7 +15,7 @@
 
       <el-table-column width="100px" align="center" label="缩略图">
         <template slot-scope="scope">
-          <el-avatar shape="square" size="medium" fit="fit" :src="scope.row.image_uri"></el-avatar>
+          <el-avatar shape="square" size="medium" fit="fit" :src="scope.row.thumb"></el-avatar>
         </template>
       </el-table-column>
 
@@ -50,22 +50,25 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="操作" width="120">
+      <el-table-column align="center" label="操作" width="180" fixed="right">
         <template slot-scope="scope">
-          <router-link :to="'/example/edit/'+scope.row.id">
+           <router-link :to="'/product/info/'+scope.row.id">
+            <el-button type="text" size="small" >产品管理</el-button>
+          </router-link>
+          <router-link :to="'/product/edit/'+scope.row.id">
             <el-button type="text" size="small" >编辑</el-button>
           </router-link>
-          <el-button type="text" size="small"> 删除</el-button>
+          <el-button type="text" size="small" @click="delTap(scope.row.id)"> 删除</el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
+    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.count" @pagination="getList" />
   </div>
 </template>
 
 <script>
-import { productList } from '@/api/product'
+import { productList, delProduct } from '@/api/product'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 export default {
@@ -84,10 +87,10 @@ export default {
     return {
       list: null,
       total: 0,
-      listLoading: true,
+      isLoading: true,
       listQuery: {
         page: 1,
-        limit: 20
+        count: 20
       }
     }
   },
@@ -96,11 +99,22 @@ export default {
   },
   methods: {
     getList() {
-      this.listLoading = true
+      this.isLoading = true
       productList(this.listQuery).then(res => {
         this.list = res.data
         this.total = res.total
-        this.listLoading = false;
+        this.isLoading = false;
+      })
+    },
+    delTap(id){
+      this.$confirm('确定要删除？').then(res=>{
+        console.log('--------- 删除商品', id);
+        delProduct({id:id}).then(ress=>{
+          this.$message.success("商品删除成功！");
+          this.getList();
+        })
+      }).catch(res=>{
+
       })
     }
   }

@@ -1,24 +1,26 @@
 <template>
-    <div class="upload-container">
-        <el-upload
-            class="upload-demo"
-            style="width:400px;"
-            :action="uploadUrl()"
-            :before-upload="beforeAvatarUpload"
-            :on-remove="handleRemove"
-            :on-error="handleError"
-            :file-list="fileList"
-            :on-success="handleSuccess"
-            list-type="picture"
-        >
-            <el-button size="small" type="primary">点击上传</el-button>
-            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-        </el-upload>
-    </div>
+  <div class="upload-container">
+    <el-upload
+      class="upload-demo"
+      style="width:400px;"
+      :action="uploadUrl()"
+      :data="uploadData()"
+      :before-upload="beforeAvatarUpload"
+      :on-remove="handleRemove"
+      :on-error="handleError"
+      :file-list="fileList"
+      :on-success="handleSuccess"
+      list-type="picture"
+    >
+      <el-button size="small" type="primary">点击上传</el-button>
+      <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+    </el-upload>
+  </div>
 </template>
 
 <script>
 import { getToken } from "@/api/qiniu";
+import config from "@/api/config";
 // 头像上传---进度条
 export default {
   name: "UploadFile",
@@ -29,13 +31,15 @@ export default {
     }
   },
   data() {
-    return {
-      
-    };
-  },  
+    return {};
+  },
   methods: {
     uploadUrl() {
-      return "https://www.mocky.io/v2/5185415ba171ea3a00704eed/posts/"; //'https://httpbin.org/post';//
+      return config.qiniuURL; //'https://bshop.fengzhankeji.com/api/../addons/qiniu/index/upload/'//"https://www.mocky.io/v2/5185415ba171ea3a00704eed/posts/"; //'https://httpbin.org/post';//
+    },
+
+    uploadData() {
+      return { uid: this.$store.getters.uid };
     },
 
     emitInput(val) {
@@ -47,14 +51,22 @@ export default {
     },
 
     handleRemove(file, fileList) {
-      console.log('-------', file, fileList)
+      console.log("-------", file, fileList);
       this.emitInput(fileList);
     },
 
     handleSuccess(res, file, fileList) {
-      let url = URL.createObjectURL(file.raw);
-      console.log("-----上传成功：", res, file, url);
-      this.emitInput(fileList);
+      console.log("-----上传成功：", res, file, fileList);
+      if (res.code == 1) {
+        let temp = this.fileList;
+        temp.push({
+          url: file.response.data.url,
+          name: file.name
+        });
+        this.emitInput(temp);
+      } else {
+        this.$message.error("图片上传失败，请重新上传！");
+      }
     },
 
     beforeAvatarUpload(file) {

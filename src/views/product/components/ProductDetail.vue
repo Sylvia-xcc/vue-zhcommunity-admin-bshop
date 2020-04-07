@@ -1,85 +1,96 @@
 <template>
   <div class="createPost-container" style="padding:30px 50px;">
-    <el-form ref="postForm" :model="postForm" :rules="rules" class="form-container"> 
-        <el-form-item style="margin-bottom: 40px;" prop="name" label-width="100px" label="产品名称：" :required="true">
-          <el-input placeholder="最多允许输入50个字符"  v-model="postForm.name" maxlength="50" show-word-limit clearable> </el-input>
-        </el-form-item>
-
-        <el-form-item style="margin-bottom: 40px;" label-width="100px" label="产品类型：" :required="true">
-          <el-cascader :options="options" v-model="postForm.classify" clearable></el-cascader>
-        </el-form-item>
-
-        <el-form-item label-width="100px" label="状态：">
-            <el-radio-group v-model="postForm.status">
-                <el-radio label="1" >上架</el-radio>
-                <el-radio label="0" >下架</el-radio>
-            </el-radio-group>
-        </el-form-item>
-
-        <el-form-item style="margin-bottom: 40px;" label-width="100px" label="原价：" :required="true">
-          <el-input placeholder="" v-model="postForm.price" clearable style="width:200px;"> </el-input>
-        </el-form-item>
-
-        <el-form-item style="margin-bottom: 40px;" label-width="100px" label="一口价：" :required="true">
-          <el-input placeholder="" v-model="postForm.price_yh" clearable style="width:200px;"> </el-input>
-        </el-form-item>
-
-        <el-form-item style="margin-bottom: 40px;" label-width="100px" label="库存：" :required="true">
-          <el-input placeholder="" v-model="postForm.stock" clearable style="width:200px;"> </el-input>
-        </el-form-item>
-
-        <el-form-item style="margin-bottom: 30px;" prop="thumb" label-width="100px" label="缩略图：" :required="true">         
-          <Upload v-model="postForm.thumb" />
-        </el-form-item>
-
-        <el-form-item style="margin-bottom: 40px; text-align:left;" label-width="100px" label="轮播图：">
-          <UploadFile :fileList="postForm.banner" @uploadfile="uploadFile" />
-        </el-form-item>
-        
-        <el-form-item  style="margin-bottom: 30px;" label-width="100px" label="视频：">         
-          <VideoUpload v-model="postForm.video" />
-        </el-form-item>
-
-        <el-form-item prop="content" style="margin-bottom: 30px;" label-width="100px" label="详情：">
-          <Tinymce ref="editor" v-model="postForm.content" :height="400" />
-        </el-form-item>
-
-        <el-form-item style="text-align:center; margin-bottom: 30px;">
-          <el-button type="primary" @click="onSubmit">立即创建</el-button>
-        </el-form-item>
-
+    <el-form ref="postForm" :model="postForm" :rules="rules" class="form-container">
+      <el-form-item
+        style="margin-bottom: 40px;"
+        prop="name"
+        label-width="100px"
+        label="产品名称："
+        :required="true"
+      >
+        <el-input
+          placeholder="最多允许输入50个字符"
+          v-model="postForm.name"
+          maxlength="50"
+          show-word-limit
+          clearable
+        ></el-input>
+      </el-form-item>
+      <el-form-item style="margin-bottom: 40px;" label-width="100px" label="产品类型：" :required="true">
+        <el-cascader :options="options" v-model="postForm.classify" clearable></el-cascader>
+      </el-form-item>
+      <el-form-item label-width="100px" label="状态：">
+        <el-radio-group v-model="postForm.show">
+          <el-radio label="1">上架</el-radio>
+          <el-radio label="0">下架</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item style="margin-bottom: 40px;" label-width="100px" label="原价：" :required="true">
+        <el-input placeholder="" v-model="postForm.price" clearable style="width:200px;"></el-input>
+      </el-form-item>
+      <el-form-item style="margin-bottom: 40px;" label-width="100px" label="一口价：" :required="true">
+        <el-input placeholder="" v-model="postForm.price_yh" clearable style="width:200px;"></el-input>
+      </el-form-item>
+      <el-form-item style="margin-bottom: 40px;" label-width="100px" label="库存：" :required="true">
+        <el-input placeholder="" v-model="postForm.stock" clearable style="width:200px;"></el-input>
+      </el-form-item>
+      <el-form-item
+        style="margin-bottom: 30px;"
+        prop="thumb"
+        label-width="100px"
+        label="缩略图："
+        :required="true"
+      >
+        <Upload v-model="postForm.thumb"/>
+      </el-form-item>
+      <el-form-item style="margin-bottom: 40px; text-align:left;" label-width="100px" label="轮播图：">
+        <UploadFile :fileList="postForm.fileList" @uploadfile="uploadFile"/>
+      </el-form-item>
+      <el-form-item style="margin-bottom: 30px;" label-width="100px" label="视频：">
+        <VideoUpload v-model="postForm.video"/>
+      </el-form-item>
+      <el-form-item prop="content" style="margin-bottom: 30px;" label-width="100px" label="详情：">
+        <Tinymce ref="editor" v-model="postForm.content" :height="400"/>
+      </el-form-item>
+      <el-form-item style="text-align:center; margin-bottom: 30px;">
+        <el-button type="primary" @click="onSubmit" v-if="!isEdit">立即创建</el-button>
+        <el-button type="primary" @click="onEditSubmit" v-else>保存</el-button>
+      </el-form-item>
     </el-form>
   </div>
 </template>
 
 <script>
-import Tinymce from '@/components/Tinymce'
-import Upload from '@/components/Upload/AvatarImage'
-import VideoUpload from '@/components/Upload/VideoUpload'
-import UploadFile from '@/components/Upload/UploadFile'
-import MDinput from '@/components/MDinput'
-import Sticky from '@/components/Sticky' // 粘性header组件
-import { validURL } from '@/utils/validate'
-import { fetchProduct, addProduct } from '@/api/product'
-import { searchUser } from '@/api/remote-search'
+import Tinymce from "@/components/Tinymce";
+import Upload from "@/components/Upload/AvatarImage";
+import VideoUpload from "@/components/Upload/VideoUpload";
+import UploadFile from "@/components/Upload/UploadFile";
+import MDinput from "@/components/MDinput";
+import Sticky from "@/components/Sticky"; // 粘性header组件
+import { validURL } from "@/utils/validate";
+import { fetchProduct, addProduct, editProduct, fetchCategoryList } from "@/api/product";
+import { searchUser } from "@/api/remote-search";
 
 const defaultForm = {
-  name: '', // 商品名称
-  classify:[],//商品分类
-  status: '1',//商品状态1：上架，0：下架
-  price:'',//原价
-  price_yh:'',//一口价
-  stock:'',//库存
-  thumb: '', // 缩略图
-  banner:[],//轮播图
-  video:'',//视频路径
-  content: '', // 商品详情
+  name: "", // 商品名称
+  classify: [], //商品分类
+  show: "1", //商品状态1：上架，0：下架
+  price: "", //原价
+  price_yh: "", //一口价
+  stock: "", //库存
+  thumb: "", // 缩略图
+  banner: [], //轮播图
+  fileList: [],
+  video: "", //视频路径
+  content: "", // 商品详情
   id: undefined,
-}
+  type: 1,
+  fid: 0
+};
 
 export default {
-  name: 'ArticleDetail',
-  components: { Tinymce, MDinput, Upload, Sticky,VideoUpload,UploadFile},
+  name: "ProductDetail",
+  components: { Tinymce, MDinput, Upload, Sticky, VideoUpload, UploadFile },
   props: {
     isEdit: {
       type: Boolean,
@@ -88,170 +99,167 @@ export default {
   },
   data() {
     const validateRequire = (rule, value, callback) => {
-      if (value === '') {
+      if (value === "") {
         this.$message({
-          message: rule.field + '为必传项',
-          type: 'error'
-        })
-        callback(new Error(rule.field + '为必传项'))
+          message: rule.field + "为必传项",
+          type: "error"
+        });
+        callback(new Error(rule.field + "为必传项"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     const validateSourceUri = (rule, value, callback) => {
       if (value) {
         if (validURL(value)) {
-          callback()
+          callback();
         } else {
           this.$message({
-            message: '外链url填写不正确',
-            type: 'error'
-          })
-          callback(new Error('外链url填写不正确'))
+            message: "外链url填写不正确",
+            type: "error"
+          });
+          callback(new Error("外链url填写不正确"));
         }
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     return {
       postForm: Object.assign({}, defaultForm),
       loading: false,
       userListOptions: [],
       rules: {
-        thumb: [{validator: validateRequire }],
-        name: [{validator: validateRequire }],
+        thumb: [{ validator: validateRequire }],
+        name: [{ validator: validateRequire }],
         content: [{ validator: validateRequire }]
       },
       tempRoute: {},
-      options: [{
-          value: '1',
-          label: '服装',
-          children: [{
-            value: '10',
-            label: '女装',
-            children: [{
-              value: '100',
-              label: '牛仔裤'
-            }, {
-              value: '101',
-              label: '牛仔裙'
-            }, {
-              value: '102',
-              label: '喇叭裤'
-            }]
-          }, {
-            value: '11',
-            label: '鞋子',
-            children: [{
-              value: '110',
-              label: '老爹鞋'
-            }, {
-              value: '111',
-              label: '小白鞋'
-            }]
-          }]
-        },  {
-          value: '20',
-          label: '鞋子',
-          children: [{
-            value: '200',
-            label: '男鞋'
-          }, {
-            value: '201',
-            label: '女鞋'
-          }, {
-            value: '203',
-            label: '童鞋'
-          }]
-        }]
-    }
+      options: []
+    };
   },
   computed: {
-    contentShortLength() {
-      return this.postForm.content_short.length
-    },
     displayTime: {
       // set and get is useful when the data
       // returned by the back end api is different from the front end
       // back end return => "2013-06-25 06:59:25"
       // front end need timestamp => 1372114765000
       get() {
-        return (+new Date(this.postForm.display_time))
+        return +new Date(this.postForm.display_time);
       },
       set(val) {
-        this.postForm.display_time = new Date(val)
+        this.postForm.display_time = new Date(val);
       }
     }
   },
   created() {
     if (this.isEdit) {
-      const id = this.$route.params && this.$route.params.id
-      this.fetchData(id)
+      const id = this.$route.params && this.$route.params.id;
+      this.fetchData(id);
     }
-
-    // Why need to make a copy of this.$route here?
-    // Because if you enter this page and quickly switch tag, may be in the execution of the setTagsViewTitle function, this.$route is no longer pointing to the current page
-    // https://github.com/PanJiaChen/vue-element-admin/issues/1221
-    this.tempRoute = Object.assign({}, this.$route)
+    this.tempRoute = Object.assign({}, this.$route);
+    this.getCategoryList();
   },
   methods: {
-    uploadUrl(){
-      return 'https://www.mocky.io/v2/5185415ba171ea3a00704eed/posts/';//'https://httpbin.org/post';//
+    getCategoryList() {
+      fetchCategoryList().then(res => {
+        this.options = res;
+        console.log("----------- options", this.options);
+      });
     },
     fetchData(id) {
-      fetchArticle(id).then(response => {
-        this.postForm = response.data
-
-        // just for test
-        this.postForm.title += `   Article Id:${this.postForm.id}`
-        this.postForm.content_short += `   Article Id:${this.postForm.id}`
-
-        // set tagsview title
-        this.setTagsViewTitle()
-
-        // set page title
-        this.setPageTitle()
-      }).catch(err => {
-        console.log(err)
+      fetchProduct(id).then(res => {
+        console.log('-----------edit product: ', res)
+        this.postForm = res;
+        this.postForm.classify = [res.cid];
+        this.postForm.show = res.show.toString();
+        let banner = JSON.parse(res.banner);
+        let fileList =[];
+        for(let i=0; i<banner.length; i++){
+          fileList.push({
+            name:'',
+            url:banner[i]
+          })
+        }
+        console.log('---------', fileList)
+        this.postForm.fileList = fileList;
       })
+      .catch(err => {
+         console.log(err);
+      });
     },
-    setTagsViewTitle() {
-      const title = 'Edit Article'
-      const route = Object.assign({}, this.tempRoute, { title: `${title}-${this.postForm.id}` })
-      this.$store.dispatch('tagsView/updateVisitedView', route)
-    },
-    setPageTitle() {
-      const title = 'Edit Article'
-      document.title = `${title} - ${this.postForm.id}`
-    },
+    //新增
     onSubmit() {
-      console.log('submit:',this.postForm)
+      console.log("submit:", this.postForm);
       this.$refs.postForm.validate(valid => {
         if (valid) {
-          this.loading = true
-          // this.$notify({
-          //   title: '成功',
-          //   message: '发布文章成功',
-          //   type: 'success',
-          //   duration: 2000
-          // })
-          // this.loading = false
-          addProduct(this.postForm).then(res=>{
-            console.log('------------ add ', res)
-          })
+          this.loading = true;
+          this.postForm.cid = this.postForm.classify[
+            this.postForm.classify.length - 1
+          ];
+          let fileList = this.postForm.fileList;
+          let banner = [];
+          for (let i = 0; i < fileList.length; i++) {
+            banner.push(fileList[i].url);
+          }
+          console.log("-------------", banner);
+          this.postForm.banner = JSON.stringify(banner);
+          addProduct(this.postForm).then(res => {
+            console.log("------------ add ", res);
+            this.$notify({
+              title: "成功",
+              message: "商品添加成功",
+              type: "success",
+              duration: 2000
+            });
+            this.loading = false;
+            this.$refs.postForm.resetFields();
+            this.$router.push({ path:'list'})
+          });
         } else {
-          console.log('error submit!!')
-          return false
+          console.log("error submit!!");
+          return false;
         }
-      })
+      });
     },
 
-    uploadFile(val){
-      console.log('------------ uploadFile', val)
+    //修改
+    onEditSubmit() {
+      console.log("submit:", this.postForm);
+      this.$refs.postForm.validate(valid => {
+        if (valid) {
+          this.loading = true;
+          this.postForm.cid = this.postForm.classify[
+            this.postForm.classify.length - 1
+          ];
+          let fileList = this.postForm.fileList;
+          let banner = [];
+          for (let i = 0; i < fileList.length; i++) {
+            banner.push(fileList[i].url);
+          }
+          console.log("-------------", banner);
+          this.postForm.banner = JSON.stringify(banner);
+          editProduct(this.postForm).then(res => {
+            this.$notify({
+              title: "成功",
+              message: "商品修改成功",
+              type: "success",
+              duration: 2000
+            });
+            this.loading = false;
+          });
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
     },
 
+    uploadFile(val) {
+      console.log("------------ uploadFile", val);
+      this.postForm.fileList = val;
+    }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

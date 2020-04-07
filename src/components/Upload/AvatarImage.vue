@@ -1,31 +1,33 @@
 <template>
-    <div class="upload-container">
-        <el-upload
-            class="avatar-uploader"
-            :action="uploadUrl()"
-            :show-file-list="false"
-            :before-upload="beforeAvatarUpload"
-            :on-success="handleSuccess"
-            :on-error="handleError"
-            :on-progress="handleProgress"
-        >
-            <div class="avatar-progress" v-if="progressFlag">
-                <el-progress type="circle" :percentage="percent"></el-progress>
-            </div>
-            <div v-else>
-                <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                <div v-if="imageUrl" class="image-preview-action">
-                    <i class="el-icon-delete" @click.stop="rmImage"></i>
-                </div>
-            </div>
-        </el-upload>
-    </div>
+  <div class="upload-container">
+    <el-upload
+      class="avatar-uploader"
+      :action="uploadUrl()"
+      :data="uploadData()"
+      :show-file-list="false"
+      :before-upload="beforeAvatarUpload"
+      :on-success="handleSuccess"
+      :on-error="handleError"
+      :on-progress="handleProgress"
+    >
+      <div class="avatar-progress" v-if="progressFlag">
+        <el-progress type="circle" :percentage="percent"></el-progress>
+      </div>
+      <div v-else>
+        <img v-if="imageUrl" :src="imageUrl" class="avatar">
+        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+        <div v-if="imageUrl" class="image-preview-action">
+          <i class="el-icon-delete" @click.stop="rmImage"></i>
+        </div>
+      </div>
+    </el-upload>
+  </div>
 </template>
 
 
 <script>
 import { getToken } from "@/api/qiniu";
+import config from "@/api/config";
 // 头像上传---进度条
 export default {
   name: "AvatarImage",
@@ -49,14 +51,18 @@ export default {
   },
   methods: {
     uploadUrl() {
-      return "https://www.mocky.io/v2/5185415ba171ea3a00704eed/posts/"; //'https://httpbin.org/post';//
+      return config.qiniuURL; //"https://www.mocky.io/v2/5185415ba171ea3a00704eed/posts/"; //'https://httpbin.org/post';//
+    },
+
+    uploadData() {
+      return { uid: this.$store.getters.uid };
     },
 
     emitInput(val) {
       this.$emit("input", val);
     },
 
-    rmImage(){
+    rmImage() {
       this.emitInput("");
     },
 
@@ -72,12 +78,15 @@ export default {
     },
 
     handleSuccess(res, file, fileList) {
-      let url = URL.createObjectURL(file.raw);
-      console.log("-----上传成功：", res, file, url);
-      this.progressFlag = false;
-      this.percent = 0;
-      //   this.tempUrl = url;
-      this.emitInput(url);
+      // let url = URL.createObjectURL(file.raw);
+      console.log("-----上传成功：", res);
+      if (res.code == 1) {
+        this.progressFlag = false;
+        this.percent = 0;
+        this.emitInput(res.data.url);
+      }else{
+        this.$message.error("图片上传失败，请重新上传！");
+      }
     },
 
     handleProgress(event, file, fileList) {
@@ -152,8 +161,8 @@ export default {
       color: #fff;
       opacity: 0;
       font-size: 20px;
-      background-color: rgba(0, 0, 0, .5);
-      transition: opacity .3s;
+      background-color: rgba(0, 0, 0, 0.5);
+      transition: opacity 0.3s;
       cursor: pointer;
       text-align: center;
       line-height: 128px;

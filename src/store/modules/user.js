@@ -7,7 +7,8 @@ const state = {
   name: '',
   avatar: '',
   introduction: '',
-  roles: []
+  roles: [],
+  uid:'',
 }
 
 const mutations = {
@@ -25,6 +26,9 @@ const mutations = {
   },
   SET_ROLES: (state, roles) => {
     state.roles = roles
+  },
+  SET_UID:(state, uid)=>{
+    state.uid = uid;
   }
 }
 
@@ -53,7 +57,7 @@ const actions = {
         data.roles = ['admin'];
         data.introduction = 'Admin my ';
         data.avatar = 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif';
-        const {roles, name, avatar, introduction } = data
+        const {roles, name, avatar, introduction, id } = data
         // roles must be a non-empty array
         if (!roles || roles.length <= 0) {
           reject('getInfo: roles must be a non-null array!')
@@ -63,6 +67,7 @@ const actions = {
         commit('SET_NAME', name)
         commit('SET_AVATAR', avatar)
         commit('SET_INTRODUCTION', introduction)
+        commit('SET_UID', id)
         resolve(data)
       }).catch(error => {
         reject(error)

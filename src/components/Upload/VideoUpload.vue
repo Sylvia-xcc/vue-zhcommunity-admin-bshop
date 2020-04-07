@@ -3,6 +3,7 @@
     <el-upload
       class="avatar-uploader el-upload--text"
       :action="uploadUrl()"
+      :data="uploadData()"
       :show-file-list="false"
       :on-success="handleVideoSuccess"
       :before-upload="beforeUploadVideo"
@@ -32,6 +33,7 @@
 
 <script>
 import { getToken } from "@/api/qiniu";
+import config from "@/api/config";
 // 头像上传---进度条
 export default {
   name: "VideoUpload",
@@ -54,7 +56,11 @@ export default {
   },
   methods: {
     uploadUrl() {
-      return "https://www.mocky.io/v2/5185415ba171ea3a00704eed/posts/"; //'https://httpbin.org/post';//
+      return config.qiniuURL; //'https://bshop.fengzhankeji.com/api/../addons/qiniu/index/upload/'//"https://www.mocky.io/v2/5185415ba171ea3a00704eed/posts/"; //'https://httpbin.org/post';//
+    },
+
+    uploadData() {
+      return { uid: this.$store.getters.uid };
     },
 
     emitInput(val) {
@@ -65,7 +71,7 @@ export default {
       this.emitInput("");
     },
     beforeUploadVideo(file) {
-      const isLt10M = file.size / 1024 / 1024 < 1;
+      const isLt10M = file.size / 1024 / 1024 < 10;
       let videoType = [
         "video/mp4",
         "video/ogg",
@@ -94,16 +100,16 @@ export default {
     },
     //获取上传图片地址
     handleVideoSuccess(res, file) {
-      let url =
-        "https://www.fengzhankeji.com/qizhuhome/data/upload/2019-11-27/5dde39f275eea.mp4"; //URL.createObjectURL(file.raw);
-      console.log("------ 视频上传成功：", url);
-      this.videoFlag = false;
-      this.videoUploadPercent = 0;
-      //   if (res.status == 200) {
-      this.emitInput(url);
-      //   } else {
-      //     this.$message.error("视频上传失败，请重新上传！");
-      //   }
+      // let url =
+      //   "https://www.fengzhankeji.com/qizhuhome/data/upload/2019-11-27/5dde39f275eea.mp4"; //URL.createObjectURL(file.raw);
+      console.log("------ 视频上传成功：", res);
+      if (res.code == 1) {
+        this.videoFlag = false;
+        this.videoUploadPercent = 0;
+        this.emitInput(res.data.url);
+      } else {
+        this.$message.error("视频上传失败，请重新上传！");
+      }
     }
   }
 };
