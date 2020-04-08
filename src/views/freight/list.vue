@@ -1,34 +1,27 @@
 <template>
   <div class="app-container">
-    <el-table
-      v-loading="isLoading"
-      :data="list"
-      border=""
-      fit
-      highlight-current-row
-      style="width: 100%"
-    >
+    <el-table v-loading="isLoading" :data="list" border="" fit highlight-current-row style="width: 80%">
       <el-table-column align="center" label="ID" width="80">
         <template slot-scope="scope">
           <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column min-width="150px" label="属性名称">
+      <el-table-column width="250px" align="center" label="模板名称">
         <template slot-scope="scope">
-          <span>{{ scope.row.attr_name }}</span>
+          <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column width="120px" align="center" label="排序">
+      <el-table-column width="250px"  align="center" label="运送方式">
         <template slot-scope="scope">
-          <span>{{ scope.row.sort }}</span>
+          <span>{{ scope.row.transport_type | transportFilter }}</span>
         </template>
       </el-table-column>
-      <el-table-column width="200px" label="添加时间">
+      <el-table-column width="250px" align="center" label="计价方式">
         <template slot-scope="scope">
-          <span>{{ scope.row.addtime }}</span>
+          <span>{{ scope.row.valuation_type | statusFilter}}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="操作" width="120">
+      <el-table-column align="center" label="操作" min-width="250">
         <template slot-scope="scope">
           <router-link :to="'/product/attribute/edit/'+scope.row.id">
             <el-button type="text" size="small">修改</el-button>
@@ -38,22 +31,35 @@
         </template>
       </el-table-column>
     </el-table>
-    <pagination
-      v-show="total>0"
-      :total="total"
-      :page.sync="listQuery.page"
-      :limit.sync="listQuery.count"
-      @pagination="getList"
-    />
+    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.count" @pagination="getList" />
   </div>
 </template>
 
 <script>
-import { listAttribute, delAttribute } from "@/api/product";
+import { freightList } from "@/api/freight";
 import Pagination from "@/components/Pagination"; // Secondary package based on el-pagination
 export default {
-  name: "ProductAttributeList",
+  name: "FreightList",
   components: { Pagination },
+  filters: {
+    statusFilter(status) {
+      const statusMap = {
+        '1': '件数',
+        '2': '重量',
+        '3': '体积'
+      }
+      return statusMap[status]
+    },
+    transportFilter(status) {
+      const statusMap = {
+        '1': '快递',
+        '2': '物流',
+        '3': 'ems',
+        '4': '平邮'
+      }
+      return statusMap[status]
+    }
+  },
   data() {
     return {
       list: null,
@@ -72,7 +78,7 @@ export default {
   methods: {
     getList() {
       this.isLoading = true;
-      listAttribute(this.listQuery).then(res => {
+      freightList(this.listQuery).then(res => {
         this.list = res.data;
         this.total = res.total;
         this.isLoading = false;
@@ -92,4 +98,3 @@ export default {
   }
 };
 </script>
-

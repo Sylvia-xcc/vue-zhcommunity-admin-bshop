@@ -52,12 +52,14 @@
 
       <el-table-column align="center" label="操作" width="180" fixed="right">
         <template slot-scope="scope">
-           <router-link :to="'/product/info/'+scope.row.id">
+          <router-link :to="'/product/info/'+scope.row.id">
             <el-button type="text" size="small" >产品管理</el-button>
           </router-link>
+          <el-divider direction="vertical"></el-divider>
           <router-link :to="'/product/edit/'+scope.row.id">
             <el-button type="text" size="small" >编辑</el-button>
           </router-link>
+          <el-divider direction="vertical"></el-divider>
           <el-button type="text" size="small" @click="delTap(scope.row.id)"> 删除</el-button>
         </template>
       </el-table-column>

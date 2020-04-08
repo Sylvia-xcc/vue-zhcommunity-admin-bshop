@@ -117,7 +117,7 @@ export default {
 <style lang="scss" scoped>
 @import "~@/styles/mixin.scss";
 .upload-container {
-  width: 100%;
+  width: 128px;
   position: relative;
   @include clearfix;
 
