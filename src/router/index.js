@@ -95,6 +95,12 @@ export const constantRoutes = [
     },
     children: [
       {
+        path: 'list',
+        component: () => import('@/views/product/list'),
+        name: 'ProductList',
+        meta: { title: '商品列表', icon: 'list', noCache: true }
+      },
+      {
         path: 'create',
         component: () => import('@/views/product/create'),
         name: 'ProductCreate',
