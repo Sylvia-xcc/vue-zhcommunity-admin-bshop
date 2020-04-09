@@ -1,29 +1,34 @@
 <template>
   <div class="app-container">
-    <el-table v-loading="isLoading" :data="list" border="" fit highlight-current-row style="width: 80%">
-      <el-table-column align="center" label="ID" width="80">
+    <el-table v-loading="isLoading" :data="list" border="" fit highlight-current-row style="width: 100%">
+      <el-table-column align="left" label="ID" width="80">
         <template slot-scope="scope">
           <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column width="250px" align="center" label="模板名称">
+      <el-table-column width="250px" align="left" label="模板名称">
         <template slot-scope="scope">
           <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column width="250px"  align="center" label="运送方式">
+      <el-table-column width="250px"  align="left" label="运送方式">
         <template slot-scope="scope">
           <span>{{ scope.row.transport_type | transportFilter }}</span>
         </template>
       </el-table-column>
-      <el-table-column width="250px" align="center" label="计价方式">
+      <el-table-column width="250px" align="left" label="计价方式">
         <template slot-scope="scope">
           <span>{{ scope.row.valuation_type | statusFilter}}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="操作" min-width="250">
+      <el-table-column width="250px" align="left" label="添加时间">
         <template slot-scope="scope">
-          <router-link :to="'/product/attribute/edit/'+scope.row.id">
+          <span>{{ scope.row.addtime }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="操作" min-width="200" fixed="right">
+        <template slot-scope="scope">
+          <router-link :to="'/freight/freight-edit/'+scope.row.id">
             <el-button type="text" size="small">修改</el-button>
           </router-link>
           <el-divider direction="vertical"></el-divider>
@@ -36,7 +41,7 @@
 </template>
 
 <script>
-import { freightList } from "@/api/freight";
+import { freightList, freightDel } from "@/api/freight";
 import Pagination from "@/components/Pagination"; // Secondary package based on el-pagination
 export default {
   name: "FreightList",
@@ -54,7 +59,7 @@ export default {
       const statusMap = {
         '1': '快递',
         '2': '物流',
-        '3': 'ems',
+        '3': 'EMS',
         '4': '平邮'
       }
       return statusMap[status]
@@ -88,7 +93,7 @@ export default {
       this.$confirm("确定要删除？")
         .then(res => {
           console.log("--------- 删除规格", id);
-          delAttribute({ id: id }).then(ress => {
+          freightDel({ id: id }).then(ress => {
             this.$message.success("删除成功！");
             this.getList();
           });

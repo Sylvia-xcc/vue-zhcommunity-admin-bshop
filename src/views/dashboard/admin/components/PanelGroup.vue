@@ -3,52 +3,44 @@
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel" @click="handleSetLineChartData('newVisitis')">
         <div class="card-panel-icon-wrapper icon-people">
-          <svg-icon icon-class="peoples" class-name="card-panel-icon" />
+          <svg-icon icon-class="order" class-name="card-panel-icon"/>
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">
-            New Visits
-          </div>
-          <count-to :start-val="0" :end-val="102400" :duration="2600" class="card-panel-num" />
+          <div class="card-panel-text">总订单数量</div>
+          <count-to :start-val="0" :end-val="totalOrderNum" :duration="2600" class="card-panel-num"/>
         </div>
       </div>
     </el-col>
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel" @click="handleSetLineChartData('messages')">
         <div class="card-panel-icon-wrapper icon-message">
-          <svg-icon icon-class="message" class-name="card-panel-icon" />
+          <svg-icon icon-class="purse" class-name="card-panel-icon"/>
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">
-            Messages
-          </div>
-          <count-to :start-val="0" :end-val="81212" :duration="3000" class="card-panel-num" />
+          <div class="card-panel-text">今日销售额</div>
+          <count-to :start-val="0" :end-val="todayTotalSales" :duration="3000" :decimals="2" class="card-panel-num"/>
         </div>
       </div>
     </el-col>
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel" @click="handleSetLineChartData('purchases')">
         <div class="card-panel-icon-wrapper icon-money">
-          <svg-icon icon-class="money" class-name="card-panel-icon" />
+          <svg-icon icon-class="money" class-name="card-panel-icon"/>
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">
-            Purchases
-          </div>
-          <count-to :start-val="0" :end-val="9280" :duration="3200" class="card-panel-num" />
+          <div class="card-panel-text">总销售额</div>
+          <count-to :start-val="0" :end-val="yesterdayTotalSales" :duration="3200" :decimals="2" class="card-panel-num"/>
         </div>
       </div>
     </el-col>
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel" @click="handleSetLineChartData('shoppings')">
         <div class="card-panel-icon-wrapper icon-shopping">
-          <svg-icon icon-class="shopping" class-name="card-panel-icon" />
+          <svg-icon icon-class="shopping" class-name="card-panel-icon"/>
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">
-            Shoppings
-          </div>
-          <count-to :start-val="0" :end-val="13600" :duration="3600" class="card-panel-num" />
+          <div class="card-panel-text">商品数量</div>
+          <count-to :start-val="0" :end-val="totalGoodsNum" :duration="3600" class="card-panel-num"/>
         </div>
       </div>
     </el-col>
@@ -56,18 +48,38 @@
 </template>
 
 <script>
-import CountTo from 'vue-count-to'
+import CountTo from "vue-count-to";
+import { basicDataStatistics } from "@/api/index";
 
 export default {
   components: {
     CountTo
   },
+  data() {
+    return {
+      totalGoodsNum: 0,
+      totalOrderNum: 0,
+      todayTotalSales: 0,
+      yesterdayTotalSales: 0
+    };
+  },
+  created() {
+    this.getBasicData();
+  },
   methods: {
+    getBasicData() {
+      basicDataStatistics().then(res => {
+        this.totalGoodsNum = res.totalGoodsNum;
+        this.totalOrderNum = res.totalOrderNum;
+        this.todayTotalSales = res.todayTotalSales;
+        this.yesterdayTotalSales = res.yesterdayTotalSales;
+      });
+    },
     handleSetLineChartData(type) {
-      this.$emit('handleSetLineChartData', type)
+      // this.$emit('handleSetLineChartData', type)
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -86,8 +98,8 @@ export default {
     overflow: hidden;
     color: #666;
     background: #fff;
-    box-shadow: 4px 4px 40px rgba(0, 0, 0, .05);
-    border-color: rgba(0, 0, 0, .05);
+    box-shadow: 4px 4px 40px rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.05);
 
     &:hover {
       .card-panel-icon-wrapper {
@@ -107,7 +119,7 @@ export default {
       }
 
       .icon-shopping {
-        background: #34bfa3
+        background: #34bfa3;
       }
     }
 
@@ -124,7 +136,7 @@ export default {
     }
 
     .icon-shopping {
-      color: #34bfa3
+      color: #34bfa3;
     }
 
     .card-panel-icon-wrapper {
@@ -160,7 +172,7 @@ export default {
   }
 }
 
-@media (max-width:550px) {
+@media (max-width: 550px) {
   .card-panel-description {
     display: none;
   }

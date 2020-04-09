@@ -79,11 +79,10 @@ export const constantRoutes = [
         path: 'dashboard',
         component: () => import('@/views/dashboard/index'),
         name: 'Dashboard',
-        meta: { title: '首页', icon: 'user', affix: true }
+        meta: { title: '首页', icon: 'home', affix: true }
       }
     ]
   },
-
   {
     path: '/product',
     component: Layout,
@@ -155,49 +154,129 @@ export const constantRoutes = [
           }
         ]
       },
+      // {
+      //   path: 'orderlist',
+      //   component: () => import('@/views/product/order/list'),
+      //   name: 'ProductOrderList',
+      //   meta: { title: '订单管理', icon: 'list', noCache: true }
+      // },
+      // {
+      //   path: 'detail/:id(\\d+)',
+      //   component: () => import('@/views/product/order/detail'),
+      //   name: 'ProductOrderDetail',
+      //   meta: { title: '订单详情', noCache: true, activeMenu: '/product/detail' },
+      //   hidden: true
+      // },
+      // {
+      //   path: 'freight',
+      //   component: () => import('@/views/freight/index'), // Parent router-view
+      //   name: 'Freight',
+      //   meta: { title: '运费模板', icon: 'tree' },
+      //   redirect: '/freight/index',
+      //   children: [
+      //     {
+      //       path: 'list',
+      //       component: () => import('@/views/freight/list'),
+      //       name: 'FreightList',
+      //       meta: { title: '运费模板列表' }
+      //     },
+      //     {
+      //       path: 'add',
+      //       component: () => import('@/views/freight/add'),
+      //       name: 'FreightAdd',
+      //       meta: { title: '添加模板' }
+      //     },
+      //     {
+      //       path: 'edit/:id(\\d+)',
+      //       component: () => import('@/views/product/attribute/edit'),
+      //       name: 'ProductAttributeEdit',
+      //       meta: { title: '编辑属性', noCache: true, activeMenu: '/product/attribute/edit' },
+      //       hidden: true
+      //     }
+      //   ]
+      // }
+    ]
+  },
+  {
+    path: '/order',
+    component: Layout,
+    redirect: '/order/list',
+    name: 'Order',
+    meta: {
+      title: '订单管理',
+      icon: 'order'
+    },
+    children: [
       {
-        path: 'orderlist',
-        component: () => import('@/views/product/order/list'),
-        name: 'ProductOrderList',
-        meta: { title: '订单管理', icon: 'list', noCache: true }
+        path: 'list',
+        component: () => import('@/views/order/list'),
+        name: 'OrderList',
+        meta: { title: '订单管理', icon: 'order', noCache: true }
       },
       {
         path: 'detail/:id(\\d+)',
-        component: () => import('@/views/product/order/detail'),
-        name: 'ProductOrderDetail',
-        meta: { title: '订单详情', noCache: true, activeMenu: '/product/detail' },
+        component: () => import('@/views/order/detail'),
+        name: 'OrderDetail',
+        meta: { title: '订单详情', noCache: true, activeMenu: '/order/detail' },
         hidden: true
       },
-      {
-        path: 'freight',
-        component: () => import('@/views/freight/index'), // Parent router-view
-        name: 'Freight',
-        meta: { title: '运费模板', icon: 'tree' },
-        redirect: '/freight/index',
-        children: [
-          {
-            path: 'list',
-            component: () => import('@/views/freight/list'),
-            name: 'FreightList',
-            meta: { title: '运费模板列表' }
-          },
-          {
-            path: 'add',
-            component: () => import('@/views/freight/add'),
-            name: 'FreightAdd',
-            meta: { title: '添加模板' }
-          },
-          // {
-          //   path: 'edit/:id(\\d+)',
-          //   component: () => import('@/views/product/attribute/edit'),
-          //   name: 'ProductAttributeEdit',
-          //   meta: { title: '编辑属性', noCache: true, activeMenu: '/product/attribute/edit' },
-          //   hidden: true
-          // }
-        ]
-      }
     ]
-  }
+  },
+  {
+    path: '/freight',
+    component: Layout,
+    redirect: '/freight/list',
+    name: 'Freight',
+    meta: {
+      title: '运费模板',
+      icon: 'tree'
+    },
+    children: [
+      {
+        path: 'freight-list',
+        component: () => import('@/views/freight/list'),
+        name: 'FreightList',
+        meta: { title: '模板列表', icon: 'list', noCache: true }
+      },
+      {
+        path: 'freight-add',
+        component: () => import('@/views/freight/add'),
+        name: 'FreightAdd',
+        meta: { title: '添加模板', icon: 'edit' , noCache: true}
+      },
+      {
+        path: 'freight-edit/:id(\\d+)',
+        component: () => import('@/views/freight/edit'),
+        name: 'FreightEdit',
+        meta: { title: '编辑模板', noCache: true, activeMenu: '/freight/list' },
+        hidden: true
+      },
+    ]
+  },
+  {
+    path: '/store',
+    component: Layout,
+    redirect: '/store/info',
+    name: 'Store',
+    meta: {
+      title: '店铺管理',
+      icon: 'store'
+    },
+    children: [
+      {
+        path: 'store-info',
+        component: () => import('@/views/store/info'),
+        name: 'StoreInfo',
+        meta: { title: '店铺信息', icon: 'store', noCache: true }
+      },
+      {
+        path: 'store-classify',
+        component: () => import('@/views/store/classify'),
+        name: 'StoreClassify',
+        meta: { title: '商品分类', icon: 'classify' , noCache: true}
+      },
+    ]
+  },
 ]
 
 /**

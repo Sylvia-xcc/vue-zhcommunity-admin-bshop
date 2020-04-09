@@ -72,9 +72,15 @@ service.interceptors.response.use(
     }
   },
   error => {
-    console.log('err' + error) // for debug
+    console.log('err：' + error) // for debug
+    let msg = error.msg || error;
+    //  1.判断请求超时
+    if (error.indexOf('timeout') !== -1) {
+      msg = '请求超时';
+    }
+    console.log('---------', msg)
     Message({
-      message: error.msg,
+      message: msg,
       type: 'error',
       duration: 5 * 1000
     })
