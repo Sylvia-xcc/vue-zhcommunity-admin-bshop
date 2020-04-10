@@ -8,7 +8,7 @@ const state = {
   avatar: '',
   introduction: '',
   roles: [],
-  uid:'',
+  uid: '',
 }
 
 const mutations = {
@@ -27,7 +27,7 @@ const mutations = {
   SET_ROLES: (state, roles) => {
     state.roles = roles
   },
-  SET_UID:(state, uid)=>{
+  SET_UID: (state, uid) => {
     state.uid = uid;
   }
 }
@@ -35,10 +35,10 @@ const mutations = {
 const actions = {
   // user login
   login({ commit }, userInfo) {
-    const {password, mobile } = userInfo
+    const { password, mobile } = userInfo
     return new Promise((resolve, reject) => {
       login({ mobile: mobile, password: password }).then(response => {
-        const  data = response;
+        const data = response;
         // console.log('----- login', data)
         commit('SET_TOKEN', data.token)
         setToken(data.token)
@@ -53,11 +53,11 @@ const actions = {
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
       getInfo(state.token).then(response => {
-        const  data  = response;
+        const data = response;
         data.roles = ['admin'];
         data.introduction = 'Admin my ';
-        data.avatar = 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif';
-        const {roles, name, avatar, introduction, id } = data
+        data.avatar = data.avatar == '' ? 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif' : data.avatar;//'';
+        const { roles, name, avatar, introduction, id } = data
         // roles must be a non-empty array
         if (!roles || roles.length <= 0) {
           reject('getInfo: roles must be a non-null array!')

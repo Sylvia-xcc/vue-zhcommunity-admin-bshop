@@ -184,6 +184,15 @@ export function delOrder(data) {
     data
   })
 }
+
+// 发货
+export function deliveryOrder(data) {
+  return request({
+    url: 'order/toDelivery',
+    method: 'post',
+    data
+  })
+}
 // ==订单 end================================================
 
 

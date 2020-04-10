@@ -24,8 +24,16 @@ export default {
   },
   data() {
     return {
-      title: 'Vue Element Admin',
-      logo: 'https://wpimg.wallstcn.com/69a1c46c-eb1c-4b46-8bd4-e9e686ef5251.png'
+      // title: this.$store.getter.name,//'Vue Element Admin',
+      // logo: 'https://wpimg.wallstcn.com/69a1c46c-eb1c-4b46-8bd4-e9e686ef5251.png'
+    }
+  },
+  computed:{
+    title(){
+      return this.$store.getters.name;
+    },
+    logo(){
+      return this.$store.getters.avatar;
     }
   }
 }
@@ -48,6 +56,7 @@ export default {
   line-height: 50px;
   background: #2b2f3a;
   text-align: center;
+  // padding-left: 10px;
   overflow: hidden;
 
   & .sidebar-logo-link {
@@ -57,6 +66,7 @@ export default {
     & .sidebar-logo {
       width: 32px;
       height: 32px;
+      border-radius: 10px;
       vertical-align: middle;
       margin-right: 12px;
     }

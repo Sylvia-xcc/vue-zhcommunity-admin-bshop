@@ -270,10 +270,49 @@ export const constantRoutes = [
         meta: { title: '店铺信息', icon: 'store', noCache: true }
       },
       {
-        path: 'store-classify',
-        component: () => import('@/views/store/classify'),
-        name: 'StoreClassify',
+        path: 'store-classify-list',
+        component: () => import('@/views/store/classify/list'),
+        name: 'StoreClassifyList',
         meta: { title: '商品分类', icon: 'classify' , noCache: true}
+      },
+      {
+        path: 'store-classify-add',
+        component: () => import('@/views/store/classify/add'),
+        name: 'StoreClassifyAdd',
+        meta: { title: '添加商品分类', icon: 'edit' , noCache: true},
+        hidden: true
+      },
+      {
+        path: 'store-classify-edit/:id(\\d+)',
+        component: () => import('@/views/store/classify/edit'),
+        name: 'StoreClassifyEdit',
+        meta: { title: '编辑商品分类', icon: 'edit' , noCache: true},
+        hidden: true
+      },
+    ]
+  },
+
+  {
+    path: '/assemble',
+    component: Layout,
+    redirect: '/assemble/list',
+    name: 'Assemble',
+    meta: {
+      title: '拼团管理',
+      icon: 'pintuan'
+    },
+    children: [
+      {
+        path: 'assemble-list',
+        component: () => import('@/views/assemble/list'),
+        name: 'AssembleList',
+        meta: { title: '拼团列表', icon: 'peoples' , noCache: true}
+      },
+      {
+        path: 'assemble-order-list',
+        component: () => import('@/views/assemble/orderlist'),
+        name: 'AssembleOrderList',
+        meta: { title: '订单列表', icon: 'order' , noCache: true}
       },
     ]
   },

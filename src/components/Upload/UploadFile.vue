@@ -1,5 +1,5 @@
 <template>
-  <div class="upload-container">
+  <div class="upload-container-file">
     <el-upload
       class="upload-demo"
       style="width:400px;"
@@ -12,8 +12,8 @@
       :on-success="handleSuccess"
       list-type="picture"
     >
-      <el-button size="small" type="primary">点击上传</el-button>
-      <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+      <el-button size="small" type="primary"><i class="el-icon-upload el-icon--left"></i>选择图片</el-button>
+      <div slot="tip" class="el-upload__tip">只能上传jpg/png/gif/bmp文件，且不超过2MB</div>
     </el-upload>
   </div>
 </template>
@@ -88,12 +88,12 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import "~@/styles/mixin.scss";
 .el-upload {
   text-align: left !important;
 }
-.upload-container {
+.upload-container-file {
   position: relative;
   @include clearfix;
 

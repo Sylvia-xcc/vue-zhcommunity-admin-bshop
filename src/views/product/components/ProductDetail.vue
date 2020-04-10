@@ -1,11 +1,10 @@
 <template>
   <div class="createPost-container" style="padding:30px 50px;">
-    <el-form ref="postForm" :model="postForm" :rules="rules" class="form-container">
+    <el-form ref="postForm" :model="postForm" :rules="rules" class="form-container" label-width="120px">
       <el-form-item
         style="margin-bottom: 40px;"
         prop="name"
-        label-width="100px"
-        label="产品名称："
+        label="商品名称："
         :required="true"
       >
         <el-input
@@ -16,40 +15,44 @@
           clearable
         />
       </el-form-item>
-      <el-form-item style="margin-bottom: 40px;" label-width="100px" label="产品类型：" :required="true">
+      <el-form-item style="margin-bottom: 40px;"  label="商品类目：" prop="classify" :required="true">
         <el-cascader v-model="postForm.classify" :options="options" clearable />
       </el-form-item>
-      <el-form-item label-width="100px" label="状态：">
+      <el-form-item style="margin-bottom: 40px;"  label="商品价格：" prop="price_yh" :required="true">
+        <el-input v-model="postForm.price_yh" placeholder="" clearable style="width:200px;" />
+      </el-form-item>
+      <el-form-item style="margin-bottom: 40px;"  label="商品划线价：" prop="price" :required="true">
+        <el-input v-model="postForm.price" placeholder="" clearable style="width:200px;" />
+      </el-form-item>
+      <el-form-item style="margin-bottom: 40px;"  label="库存：" prop="stock" :required="true">
+        <el-input v-model="postForm.stock" placeholder="" clearable style="width:200px;" />
+      </el-form-item>
+      <el-form-item style="margin-bottom: 40px;"  label="店铺中分类：" prop="store" :required="true">
+        <el-cascader v-model="postForm.store" placeholder="请选择店铺中分类" :options="classifyList" :show-all-levels="false" clearable :props="{value: 'id', label: 'name'}" />
+      </el-form-item>
+      <el-form-item
+        style="margin-bottom: 30px;"
+        prop="thumb"
+        label="商品图片："
+        :required="true"
+      >
+        <Upload v-model="postForm.thumb" />
+      </el-form-item>
+      <el-form-item style="margin-bottom: 40px; text-align:left;"  label="轮播图：">
+        <UploadFile :file-list="postForm.fileList" @uploadfile="uploadFile" />
+      </el-form-item>
+      <el-form-item style="margin-bottom: 30px;"  label="视频：">
+        <VideoUpload v-model="postForm.video" />
+      </el-form-item>
+      
+      <el-form-item  label="状态：">
         <el-radio-group v-model="postForm.show">
           <el-radio label="1">上架</el-radio>
           <el-radio label="0">下架</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item style="margin-bottom: 40px;" label-width="100px" label="原价：" :required="true">
-        <el-input v-model="postForm.price" placeholder="" clearable style="width:200px;" />
-      </el-form-item>
-      <el-form-item style="margin-bottom: 40px;" label-width="100px" label="一口价：" :required="true">
-        <el-input v-model="postForm.price_yh" placeholder="" clearable style="width:200px;" />
-      </el-form-item>
-      <el-form-item style="margin-bottom: 40px;" label-width="100px" label="库存：" :required="true">
-        <el-input v-model="postForm.stock" placeholder="" clearable style="width:200px;" />
-      </el-form-item>
-      <el-form-item
-        style="margin-bottom: 30px;"
-        prop="thumb"
-        label-width="100px"
-        label="缩略图："
-        :required="true"
-      >
-        <Upload v-model="postForm.thumb" />
-      </el-form-item>
-      <el-form-item style="margin-bottom: 40px; text-align:left;" label-width="100px" label="轮播图：">
-        <UploadFile :file-list="postForm.fileList" @uploadfile="uploadFile" />
-      </el-form-item>
-      <el-form-item style="margin-bottom: 30px;" label-width="100px" label="视频：">
-        <VideoUpload v-model="postForm.video" />
-      </el-form-item>
-      <el-form-item prop="content" style="margin-bottom: 30px;" label-width="100px" label="详情：">
+
+      <el-form-item prop="content" style="margin-bottom: 30px;"  label="详情：" :required="true">
         <Tinymce ref="editor" v-model="postForm.content" :height="400" />
       </el-form-item>
       <el-form-item style="text-align:center; margin-bottom: 30px;">
@@ -65,11 +68,10 @@ import Tinymce from '@/components/Tinymce'
 import Upload from '@/components/Upload/AvatarImage'
 import VideoUpload from '@/components/Upload/VideoUpload'
 import UploadFile from '@/components/Upload/UploadFile'
-import MDinput from '@/components/MDinput'
 import Sticky from '@/components/Sticky' // 粘性header组件
 import { validURL } from '@/utils/validate'
 import { detailProduct, addProduct, editProduct, fetchCategoryList } from '@/api/product'
-import { searchUser } from '@/api/remote-search'
+import { classifyList } from "@/api/classify";
 
 const defaultForm = {
   name: '', // 商品名称
@@ -85,12 +87,13 @@ const defaultForm = {
   content: '', // 商品详情
   id: undefined,
   type: 1,
-  fid: 0
+  fid: 0,
+  store:[]
 }
 
 export default {
   name: 'ProductDetail',
-  components: { Tinymce, MDinput, Upload, Sticky, VideoUpload, UploadFile },
+  components: { Tinymce, Upload, Sticky, VideoUpload, UploadFile },
   props: {
     isEdit: {
       type: Boolean,
@@ -109,46 +112,23 @@ export default {
         callback()
       }
     }
-    const validateSourceUri = (rule, value, callback) => {
-      if (value) {
-        if (validURL(value)) {
-          callback()
-        } else {
-          this.$message({
-            message: '外链url填写不正确',
-            type: 'error'
-          })
-          callback(new Error('外链url填写不正确'))
-        }
-      } else {
-        callback()
-      }
-    }
     return {
       postForm: Object.assign({}, defaultForm),
       loading: false,
       userListOptions: [],
       rules: {
-        thumb: [{ validator: validateRequire }],
-        name: [{ validator: validateRequire }],
-        content: [{ validator: validateRequire }]
+        name: [{ required: true, message: "请输入商品名称", trigger: "blur" }],
+        thumb: [{ required: true, message: "请选择商品图片", trigger: "blur" }],
+        classify: [{ required: true, message: '请选择商品类目', trigger: 'change' }],
+        price_yh: [{ required: true, message: "请输入商品价格", trigger: "blur" }],
+        price: [{ required: true, message: "请输入商品划线价", trigger: "blur" }],
+        stock: [{ required: true, message: "请输入商品库存", trigger: "blur" }],
+        store: [{ required: true, message: '请选择商品店铺中分类', trigger: 'change' }],
+        content: [{ required: true, message: "请输入商品详情", trigger: "blur" }],
       },
       tempRoute: {},
-      options: []
-    }
-  },
-  computed: {
-    displayTime: {
-      // set and get is useful when the data
-      // returned by the back end api is different from the front end
-      // back end return => "2013-06-25 06:59:25"
-      // front end need timestamp => 1372114765000
-      get() {
-        return +new Date(this.postForm.display_time)
-      },
-      set(val) {
-        this.postForm.display_time = new Date(val)
-      }
+      options: [],
+      classifyList:[],
     }
   },
   created() {
@@ -157,7 +137,8 @@ export default {
       this.fetchData(id)
     }
     this.tempRoute = Object.assign({}, this.$route)
-    this.getCategoryList()
+    this.getCategoryList();
+    this.getClassifyList();
   },
   methods: {
     getCategoryList() {
@@ -186,6 +167,20 @@ export default {
         .catch(err => {
           console.log(err)
         })
+    },
+    getClassifyList(){
+      classifyList({paging:0}).then(res => {
+        for(let i=0; i<res.length; i++){
+          let obj ={
+            name:res[i].name,
+            id:res[i].id
+          }
+          if(res[i].children.length>0)
+            obj.children = res[i].children;
+          this.classifyList.push(obj);
+        }
+        console.log('-----')
+      });
     },
     // 新增
     onSubmit() {
@@ -217,6 +212,7 @@ export default {
           })
         } else {
           console.log('error submit!!')
+          this.$message.error('有必填选项未填写，请检查！')
           return false
         }
       })

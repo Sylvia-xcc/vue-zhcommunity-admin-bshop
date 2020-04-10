@@ -56,7 +56,7 @@ export default {
   },
   data() {
     return {
-      lineChartData: null//lineChartData.newVisitis
+      lineChartData: {expectedData:[],xAxis:[]}//lineChartData.newVisitis
     }
   },
   created(){
