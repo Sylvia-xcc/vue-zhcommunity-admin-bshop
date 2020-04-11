@@ -53,7 +53,8 @@
 
       <el-table-column width="120px" label="支付类型">
         <template slot-scope="scope">
-          <span>{{ scope.row.pay_type | payFilter }}</span>
+          <!-- <span>{{ scope.row.pay_type | payFilter }}</span> -->
+           <el-tag size="mini">{{ scope.row.pay_type | payFilter }}</el-tag>
         </template>
       </el-table-column>
 

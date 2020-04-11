@@ -17,3 +17,21 @@ export function assembleOrderList(query) {
         params: query
     })
 }
+
+// 拼团订单详情
+export function assembleOrderDetail(id) {
+    return request({
+        url: 'pintuanorder/detail',
+        method: 'get',
+        params: {id}
+    })
+}
+
+// 拼团订单编辑
+export function assembleOrderEdit(data) {
+    return request({
+        url: 'pintuanorder/edit',
+        method: 'post',
+        data
+    })
+}

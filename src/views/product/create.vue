@@ -1,5 +1,5 @@
 <template>
-  <product-detail :is-edit="false" />
+  <product-detail :is-edit="false" :type="1" />
   <!-- <ForumTest></ForumTest> -->
 </template>
 

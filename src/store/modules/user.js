@@ -9,6 +9,8 @@ const state = {
   introduction: '',
   roles: [],
   uid: '',
+  cash:'',//可提现余额
+  money:'',//总盈利额
 }
 
 const mutations = {
@@ -29,6 +31,12 @@ const mutations = {
   },
   SET_UID: (state, uid) => {
     state.uid = uid;
+  },
+  SET_CASH: (state, cash) => {
+    state.cash = cash;
+  },
+  SET_MONEY: (state, money) => {
+    state.money = money;
   }
 }
 
@@ -57,7 +65,7 @@ const actions = {
         data.roles = ['admin'];
         data.introduction = 'Admin my ';
         data.avatar = data.avatar == '' ? 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif' : data.avatar;//'';
-        const { roles, name, avatar, introduction, id } = data
+        const { roles, name, avatar, introduction, id, total_money, valid_money } = data
         // roles must be a non-empty array
         if (!roles || roles.length <= 0) {
           reject('getInfo: roles must be a non-null array!')
@@ -68,6 +76,8 @@ const actions = {
         commit('SET_AVATAR', avatar)
         commit('SET_INTRODUCTION', introduction)
         commit('SET_UID', id)
+        commit('SET_MONEY', total_money)
+        commit('SET_CASH', valid_money)
         resolve(data)
       }).catch(error => {
         reject(error)

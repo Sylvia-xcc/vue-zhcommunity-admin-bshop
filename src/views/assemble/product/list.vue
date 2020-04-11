@@ -1,13 +1,13 @@
 <template>
   <div class="app-container">
-    <el-table
-      v-loading="isLoading"
-      :data="list"
-      border=""
-      fit
-      highlight-current-row
-      style="width: 100%"
-    >
+    <div style="margin:20px 0px;">
+        <router-link to="/assemble/assemble-product-add">
+            <el-button type="success" size="mini">
+                <i class="el-icon-plus el-icon--left"></i>添加拼团商品
+            </el-button>
+        </router-link>
+    </div>
+    <el-table v-loading="isLoading" :data="list" border fit highlight-current-row  style="width: 100%" >
       <el-table-column align="center" label="ID" width="80">
         <template slot-scope="scope">
           <span>{{ scope.row.id }}</span>
@@ -20,7 +20,6 @@
       </el-table-column>
       <el-table-column width="100px" align="center" label="缩略图">
         <template slot-scope="scope">
-          <!-- <el-avatar shape="square" size="medium" fit="fit" :src="scope.row.thumb"></el-avatar> -->
           <el-image
             style="width: 50px; height: 50px"
             :src="scope.row.thumb"
@@ -34,9 +33,9 @@
           <span>{{ scope.row.cid }}</span>
         </template>
       </el-table-column>
-      <el-table-column width="120px" label="划线价(￥)">
+      <el-table-column width="120px" label="人数">
         <template slot-scope="scope">
-          <span>{{ scope.row.price }}</span>
+          <span>{{ scope.row.price }}人团</span>
         </template>
       </el-table-column>
       <el-table-column width="120px" label="价格(￥)">
@@ -61,7 +60,7 @@
             <el-button type="text" size="small">产品管理</el-button>
           </router-link>
           <el-divider direction="vertical"></el-divider>
-          <router-link :to="'/product/edit/'+scope.row.id">
+          <router-link :to="'/assemble/assemble-product-edit/'+scope.row.id">
             <el-button type="text" size="small">编辑</el-button>
           </router-link>
           <el-divider direction="vertical"></el-divider>
@@ -70,11 +69,7 @@
       </el-table-column>
     </el-table>
     <pagination
-      v-show="total>0"
-      :total="total"
-      :page.sync="listQuery.page"
-      :limit.sync="listQuery.count"
-      @pagination="getList"
+      v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.count" @pagination="getList"
     />
   </div>
 </template>
@@ -103,7 +98,7 @@ export default {
       listQuery: {
         page: 1,
         count: 20,
-        type:1
+        type:3
       }
     };
   },

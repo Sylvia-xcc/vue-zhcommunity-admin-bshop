@@ -1,5 +1,5 @@
 <template>
-  <div style="padding:30px; padding-bottom:150px;">
+    <div style="padding:30px; padding-bottom:150px;">
     <el-steps :active="detail.status | activeFilter" align-center style="margin-top:20px;">
       <el-step title="下单时间" :description="detail.addtime"></el-step>
       <el-step title="付款" ></el-step>
@@ -17,14 +17,14 @@
       </el-table-column>
       <el-table-column width="200px" align="center" label="买家">
         <template slot-scope="scope">
-          <div >{{ user.nickname }}</div>
-          <div style="font-size:12px; color:#666;">(用户id：{{ user.id }})</div>
+          <div >{{ detail.userInfo.nickname }}</div>
+          <div style="font-size:12px; color:#666;">(用户id：{{ detail.userInfo.id }})</div>
         </template>
       </el-table-column>
       <el-table-column min-width="100px" align="center" label="订单金额">
         <template slot-scope="scope">
-          <div><span>订单总额：</span><span>￥{{detail.price}}</span></div>
-          <div><span>运费金额：</span><span>￥{{detail.express_money}}</span></div>
+          <div><span>订单总额：</span><span>￥{{detail.total}}</span></div>
+          <div><span>运费金额：</span><span>￥{{detail.express_price}}</span></div>
           <div><span>实付款金额：</span><span style="color:red">￥{{detail.pay_money}}</span></div>
         </template>
       </el-table-column>
@@ -39,46 +39,46 @@
     </el-table>
 
     <div class="title" style="margin-top:40px;">商品信息</div>
-    <el-table v-loading="isLoading" :data="list" border fit highlight-current-row style="width: 100%; margin-top:20px;" >
+    <el-table v-loading="isLoading" :data="[1]" border fit highlight-current-row style="width: 100%; margin-top:20px;" >
       <el-table-column label="产品ID" width="80">
         <template slot-scope="scope">
-          <span>{{ scope.row.id }}</span>
+          <span>{{ detail.pid }}</span>
         </template>
       </el-table-column>
       <el-table-column min-width="200px" label="产品名称">
         <template slot-scope="scope">
-          <div class="flex-center">
+          <div class="flex">
             <div>
-              <el-image style="width: 50px; height: 50px; border-radius:4px; " :src="scope.row.pro_thumb" fit="fit" :preview-src-list="[scope.row.pro_thumb]"></el-image>
+              <el-image style="width: 50px; height: 50px; border-radius:4px; " :src="detail.pro_photo" fit="fit" :preview-src-user="[detail.pro_photo]"></el-image>
             </div>
-            <span style="padding-left:10px;">{{ scope.row.pro_name }}</span>
+            <span style="padding-left:10px;">{{ detail.pro_name }}</span>
           </div>
         </template>
       </el-table-column>
       <el-table-column min-width="100px" label="产品属性">
         <template slot-scope="scope">
-          <span>{{ scope.row.pro_buff==''?'--': scope.row.pro_buff}}</span>
+          <span>{{ detail.pro_buff==''?'--': detail.pro_buff}}</span>
         </template>
       </el-table-column>
       <el-table-column width="120px" label="单价">
         <template slot-scope="scope">
-          <span>￥{{ scope.row.pro_price }}</span>
+          <span>￥{{ detail.pro_price }}</span>
         </template>
       </el-table-column>
       <el-table-column width="120px" label="购买数量">
         <template slot-scope="scope">
-          <span>x{{ scope.row.pro_num }}</span>
+          <span>x{{ detail.pro_num }}</span>
         </template>
       </el-table-column>
       <el-table-column width="120px" label="总价">
         <template slot-scope="scope">
-          <span>￥{{ scope.row.amount }}</span>
+          <span>￥{{ detail.pro_price }}</span>
         </template>
       </el-table-column>
     </el-table>
     <div class="shopAll">
       <span>买家留言：{{detail.remark==''?'无':detail.remark}}</span>
-      <span>总计金额：￥{{detail.amount}}</span>
+      <span>总计金额：￥{{detail.total}}</span>
     </div>
 
     <div class="title" style="margin-top:20px;">收货信息</div>
@@ -170,10 +170,11 @@
   </div>
 </template>
 
+
 <script>
-import { detailOrder, editOrder, deliveryOrder } from "@/api/product";
+import { assembleOrderDetail, assembleOrderEdit } from "@/api/assemble";
 export default {
-  name: "ProductOrderDetail",
+  name: "AssembleOrderDetail",
   filters: {
     statusFilter(status) {
       const statusMap = {
@@ -201,10 +202,6 @@ export default {
       detail: {
         order_sn: ""
       },
-      list: [],
-      user: {
-        nickname: ""
-      },
       kuaidi_name:'',
       kuaidi_number:'',
       isLoading: true
@@ -217,14 +214,9 @@ export default {
   methods: {
     fetchData(id) {
       this.isLoading = true;
-      detailOrder(id)
+      assembleOrderDetail(id)
         .then(res => {
-          console.log("-----------edit order: ", res);
-          this.list = res.productList;
-          this.detail = res.item;
-          this.detail.order_sn =
-            res.item.order_sn == null ? "" : res.item.order_sn;
-          this.user = res.userInfo;
+          this.detail = res;
           this.isLoading = false;
         })
         .catch(err => {
@@ -240,7 +232,7 @@ export default {
         kuaidi_name: this.detail.kuaidi_name,
         kuaidi_number: this.detail.kuaidi_number
       };
-      editOrder(data).then(res => {
+      assembleOrderEdit(data).then(res => {
         this.$message.success("订单修改成功");
       });
     },
@@ -260,7 +252,7 @@ export default {
         kuaidi_number:this.kuaidi_number,
         status:30
       }
-      editOrder(data).then(res=>{
+      assembleOrderEdit(data).then(res=>{
         this.$message.success('订单发货成功');
         this.fetchData(this.detail.id)
       })
@@ -276,8 +268,8 @@ export default {
 };
 </script>
 
+
 <style lang="scss" scoped>
-@import "~@/styles/mixin.scss";
 .title {
   font-size: 14px;
   padding: 12px 20px;
@@ -292,11 +284,6 @@ export default {
     top: 13px;
     left: 8px;
   }
-}
-.flex-center {
-  display: flex;
-  // justify-content: center;
-  align-items: center;
 }
 
 .shopAll{

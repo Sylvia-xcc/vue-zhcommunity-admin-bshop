@@ -154,47 +154,6 @@ export const constantRoutes = [
           }
         ]
       },
-      // {
-      //   path: 'orderlist',
-      //   component: () => import('@/views/product/order/list'),
-      //   name: 'ProductOrderList',
-      //   meta: { title: '订单管理', icon: 'list', noCache: true }
-      // },
-      // {
-      //   path: 'detail/:id(\\d+)',
-      //   component: () => import('@/views/product/order/detail'),
-      //   name: 'ProductOrderDetail',
-      //   meta: { title: '订单详情', noCache: true, activeMenu: '/product/detail' },
-      //   hidden: true
-      // },
-      // {
-      //   path: 'freight',
-      //   component: () => import('@/views/freight/index'), // Parent router-view
-      //   name: 'Freight',
-      //   meta: { title: '运费模板', icon: 'tree' },
-      //   redirect: '/freight/index',
-      //   children: [
-      //     {
-      //       path: 'list',
-      //       component: () => import('@/views/freight/list'),
-      //       name: 'FreightList',
-      //       meta: { title: '运费模板列表' }
-      //     },
-      //     {
-      //       path: 'add',
-      //       component: () => import('@/views/freight/add'),
-      //       name: 'FreightAdd',
-      //       meta: { title: '添加模板' }
-      //     },
-      //     {
-      //       path: 'edit/:id(\\d+)',
-      //       component: () => import('@/views/product/attribute/edit'),
-      //       name: 'ProductAttributeEdit',
-      //       meta: { title: '编辑属性', noCache: true, activeMenu: '/product/attribute/edit' },
-      //       hidden: true
-      //     }
-      //   ]
-      // }
     ]
   },
   {
@@ -289,6 +248,12 @@ export const constantRoutes = [
         meta: { title: '编辑商品分类', icon: 'edit' , noCache: true},
         hidden: true
       },
+      {
+        path: 'store-cashout-list',
+        component: () => import('@/views/store/cashout/list'),
+        name: 'StoreCashoutList',
+        meta: { title: '提现管理', icon: 'cash' , noCache: true}
+      },
     ]
   },
 
@@ -299,7 +264,7 @@ export const constantRoutes = [
     name: 'Assemble',
     meta: {
       title: '拼团管理',
-      icon: 'pintuan'
+      icon: 'pintuan2'
     },
     children: [
       {
@@ -309,10 +274,37 @@ export const constantRoutes = [
         meta: { title: '拼团列表', icon: 'peoples' , noCache: true}
       },
       {
+        path: 'assemble-product-list',
+        component: () => import('@/views/assemble/product/list'),
+        name: 'AssembleProductList',
+        meta: { title: '拼团商品', icon: 'list' , noCache: true}
+      },
+      {
+        path: 'assemble-product-add',
+        component: () => import('@/views/assemble/product/create'),
+        name: 'AssembleProductAdd',
+        meta: { title: '拼团商品添加', icon: 'edit' , noCache: true},
+        hidden: true
+      },
+      {
+        path: 'assemble-product-edit/:id(\\d+)',
+        component: () => import('@/views/assemble/product/edit'),
+        name: 'AssembleProductEdit',
+        meta: { title: '拼团商品修改', icon: 'edit' , noCache: true},
+        hidden: true
+      },
+      {
         path: 'assemble-order-list',
-        component: () => import('@/views/assemble/orderlist'),
+        component: () => import('@/views/assemble/order/list'),
         name: 'AssembleOrderList',
-        meta: { title: '订单列表', icon: 'order' , noCache: true}
+        meta: { title: '拼团订单', icon: 'order' , noCache: true}
+      },
+      {
+        path: 'assemble-order-detail/:id(\\d+)',
+        component: () => import('@/views/assemble/order/detail'),
+        name: 'AssembleOrderDetail',
+        meta: { title: '拼团订单详情', icon: 'order' , noCache: true},
+        hidden: true
       },
     ]
   },

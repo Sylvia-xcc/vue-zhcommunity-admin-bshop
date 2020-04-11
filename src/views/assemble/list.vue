@@ -21,12 +21,15 @@
       </el-table-column>
       <el-table-column width="250px" align="left" label="已参团成员">
         <template slot-scope="scope">
-            <el-image v-for="item in scope.row.joinList" :key="item.id" :src="item.avatar" :fit="fit" style="width:40px;height:40px; border-radius:50%;"></el-image>
+            <el-image v-for="item in scope.row.joinList" :key="item.id" :src="item.avatar" fit="fit" style="width:40px;height:40px; border-radius:50%;"></el-image>
         </template>
       </el-table-column>
       <el-table-column width="250px" align="left" label="状态">
         <template slot-scope="scope">
-          <span>{{ scope.row.status }}</span>
+          <!-- <span>{{ scope.row.status | statusFilter}}</span> -->
+          <el-tag size="small" type='danger' v-if="scope.row.status==0">{{ scope.row.status | statusFilter}}</el-tag>
+          <el-tag size="small" type='success' v-else-if="scope.row.status==1">{{ scope.row.status | statusFilter}}</el-tag>
+          <el-tag size="small" type="info" v-else>{{ scope.row.status | statusFilter}}</el-tag>
         </template>
       </el-table-column>
       <el-table-column width="250px" align="left" label="拼团商品">
@@ -58,6 +61,23 @@ import { assembleList } from "@/api/assemble";
 export default {
   name: "AssembleList",
   components: { Pagination },
+  filters: {
+    statusFilter(status) {
+      const statusMap = {
+        '0': '进行中',
+        '1': '拼团成功',
+        '2': '拼团失败'
+      }
+      return statusMap[status]
+    },
+    payFilter(status) {
+      const statusMap = {
+        'weixin': '微信支付',
+        'cash': '余额支付'
+      }
+      return statusMap[status]
+    },
+  },
   data() {
     return {
       list: [],
