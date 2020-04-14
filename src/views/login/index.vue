@@ -3,7 +3,7 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">Login Form</h3>
+        <h3 class="title">B端商户平台登录</h3>
       </div>
 
       <el-form-item prop="mobile">
@@ -47,28 +47,15 @@
 
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px; margin-top:30px;" @click.native.prevent="handleLogin">Login</el-button>
 
-      <!-- <div style="position:relative">
-        <div class="tips">
-          <span>Username : admin</span>
-          <span>Password : any</span>
-        </div>
-        <div class="tips">
-          <span style="margin-right:18px;">Username : editor</span>
-          <span>Password : any</span>
-        </div>
-
-        <el-button class="thirdparty-button" type="primary" @click="showDialog=true">
+      <div style="position:relative; margin-top:30px;">
+        <el-button class="thirdparty-button" style="" type="primary" @click="showDialog=true">
           Or connect with
         </el-button>
-      </div> -->
+      </div>
     </el-form>
 
-    <el-dialog title="Or connect with" :visible.sync="showDialog">
-      Can not be simulated on local, so please combine you own business simulation! ! !
-      <br>
-      <br>
-      <br>
-      <social-sign />
+    <el-dialog :visible.sync="showDialog" width="400px">
+      <wechat-login />
     </el-dialog>
   </div>
 </template>
@@ -76,10 +63,12 @@
 <script>
 import { validMobile } from '@/utils/validate'
 import SocialSign from './components/SocialSignin'
+import WechatLogin from './components/WechatLogin'
+
 
 export default {
   name: 'Login',
-  components: { SocialSign },
+  components: { SocialSign, WechatLogin },
   data() {
     const validateMobile = (rule, value, callback) => {
       if (!validMobile(value)) {
@@ -98,7 +87,7 @@ export default {
     return {
       loginForm: {
         mobile: '18666888668',
-        password: '111111'
+        password: '888888'
       },
       loginRules: {
         mobile: [{ required: true, trigger: 'blur', validator: validateMobile }],

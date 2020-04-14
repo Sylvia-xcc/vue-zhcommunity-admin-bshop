@@ -1,7 +1,7 @@
 <template>
     <div style="padding:30px;">
         <el-card class="box-card">
-            <span style="color:#409EFF; font-size:10px;">注：商品分类最多添加2级</span>
+            <span style="color:#409EFF; font-size:10px;">注：商品分类最多添加1级</span>
         </el-card>
         <div style="margin:20px 0px;">
             <router-link to="/store/store-classify-add">
@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import { classifyList } from "@/api/classify";
+import { classifyList, classifyDel } from "@/api/classify";
 import Pagination from "@/components/Pagination";
 
 export default {
@@ -87,6 +87,14 @@ export default {
         this.total = res.total;
         this.isLoading = false;
       });
+    },
+    delTap(id){
+      this.$confirm("是否确定要删除？").then(res=>{
+        classifyDel({id}).then(res=>{
+          this.$message.success('删除成功');
+          this.getList();
+        })
+      })      
     }
   }
 };

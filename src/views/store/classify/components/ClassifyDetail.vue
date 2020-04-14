@@ -4,7 +4,7 @@
             <el-form-item label="分类名称" :required="true" prop="name">
                 <el-input v-model="form.name" style="width:205px"></el-input>
             </el-form-item>
-            <el-form-item label="上级分类" :required="true" prop="parent_id">
+            <!-- <el-form-item label="上级分类" :required="true" prop="parent_id">
                 <el-select v-model="form.parent_id" placeholder="请选择活动区域">
                     <el-option label="一级分类" :value="0"></el-option>
                     <el-option
@@ -14,12 +14,12 @@
                         :value="item.id"
                     ></el-option>
                 </el-select>
-            </el-form-item>
-            <el-form-item label="分类排序" :required="true" prop="sort_order">
+            </el-form-item> -->
+            <el-form-item label="排序" :required="true" prop="sort_order">
                 <el-input type="number" v-model.number="form.sort_order" style="width:205px"></el-input>
                 <span style="color:#909399; font-size:12px; margin:0px 10px;">（数字越大越靠前）</span>
             </el-form-item>
-            <el-form-item label="分类图片" :required="true" prop="thumb">
+            <el-form-item label="分类图标" :required="true" prop="thumb">
                 <Upload v-model="form.thumb"/>
             </el-form-item>
             <el-form-item>

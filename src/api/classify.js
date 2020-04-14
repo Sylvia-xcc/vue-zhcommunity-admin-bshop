@@ -26,7 +26,7 @@ export function classifyAdd(data) {
     })
 }
 
-// 商户商品分类添加
+// 商户商品分类编辑
 export function classifyEdit(data) {
     return request({
         url: 'Merchantclass/edit',
@@ -35,7 +35,16 @@ export function classifyEdit(data) {
     })
 }
 
-// 商户商品分类添加
+// 商户商品分类删除
+export function classifyDel(data) {
+    return request({
+        url: 'Merchantclass/del',
+        method: 'post',
+        data
+    })
+}
+
+// 商户商品分类详情
 export function classifyDetail(id) {
     return request({
         url: 'Merchantclass/detail',

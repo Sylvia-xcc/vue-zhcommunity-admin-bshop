@@ -115,6 +115,16 @@ const actions = {
     })
   },
 
+  // login qrcode
+  loginQrcode({ commit }, token) {
+    return new Promise(resolve => {
+      console.log('------------- 登录成功')
+      commit('SET_TOKEN',token)
+      setToken(token)
+      resolve()
+    })
+  },
+
   // dynamically modify permissions
   changeRoles({ commit, dispatch }, role) {
     return new Promise(async resolve => {
