@@ -8,14 +8,14 @@
       label-width="120px"
     >
       <el-form-item style="margin-bottom: 40px;" prop="name" label="商品名称：" :required="true">
-        <el-input v-model="postForm.name" placeholder="最多允许输入50个字符"  maxlength="50" show-word-limit clearable />
+        <el-input v-model="postForm.name" placeholder=""  clearable style="width:205px;" />
       </el-form-item>
       <el-form-item style="margin-bottom: 40px;" label="商品类目：" prop="classify" :required="true">
-        <el-cascader v-model="postForm.classify" :options="options" clearable/>
+        <el-cascader v-model="postForm.classify" :options="options" placeholder="选择商品类目" clearable/>
       </el-form-item>
       <div v-if="type==3">
         <el-form-item style="margin-bottom: 40px;" label="拼团人数" prop="number" :required="true" :rules="{ required: true, message: '请输入拼团人数'}">
-          <el-input v-model="postForm.number" placeholder="" clearable style="width:200px;"/>
+          <el-input v-model="postForm.number" placeholder="" clearable style="width:205px;"/>
         </el-form-item>
         <el-form-item style="margin-bottom: 40px;" label="拼团开始时间" prop="start_time" :required="true" :rules="{ required: true, message: '请选择拼团开始时间'}">
           <el-date-picker v-model="postForm.start_time" type="datetime" placeholder="选择拼团开始时间"></el-date-picker>
@@ -25,16 +25,19 @@
         </el-form-item>
       </div>
       <el-form-item style="margin-bottom: 40px;" label="商品价格：" prop="price_yh" :required="true">
-        <el-input v-model="postForm.price_yh" placeholder="" clearable style="width:200px;"/>
+        <el-input v-model="postForm.price_yh" placeholder="" clearable style="width:205px;"/>
       </el-form-item>
       <el-form-item style="margin-bottom: 40px;" label="商品划线价：" prop="price" :required="true">
-        <el-input v-model="postForm.price" placeholder="" clearable style="width:200px;"/>
+        <el-input v-model="postForm.price" placeholder="" clearable style="width:205px;"/>
       </el-form-item>
       <el-form-item style="margin-bottom: 40px;" label="库存：" prop="stock" :required="true">
-        <el-input v-model="postForm.stock" placeholder="" clearable style="width:200px;"/>
+        <el-input v-model="postForm.stock" placeholder="" clearable style="width:205px;"/>
       </el-form-item>
       <el-form-item style="margin-bottom: 40px;" label="店铺中分类：" prop="store" :required="true">
         <el-cascader v-model="postForm.store" placeholder="请选择店铺中分类" :options="classifyList" :show-all-levels="false" clearable :props="{value: 'id', label: 'name'}" />
+        <router-link :to="'/store/store-classify-add'">
+          <el-button type="text" size="mini" style="margin-left:10px;">去添加</el-button>
+        </router-link>
       </el-form-item>
       <el-form-item style="margin-bottom: 30px;" prop="thumb" label="商品图片：" :required="true">
         <Upload v-model="postForm.thumb"/>
@@ -47,12 +50,39 @@
       </el-form-item>
       <el-form-item label="状态：">
         <el-radio-group v-model="postForm.show">
-          <el-radio label="1">上架</el-radio>
-          <el-radio label="0">下架</el-radio>
+          <el-radio :label="1">上架</el-radio>
+          <el-radio :label="0">下架</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item style="margin-bottom: 30px;" label="选择快递模板：" :required="true">
+        <el-select v-model="postForm.fid" placeholder="请选择">
+          <el-option :value="0" label="包邮"></el-option>
+          <el-option v-for="item in freight" :key="item.value" :label="item.name" :value="item.id"> </el-option>
+        </el-select>
+        <router-link :to="'/store/store-classify-add'">
+          <el-button type="text" size="mini" style="margin-left:10px;">去添加</el-button>
+        </router-link>
+      </el-form-item>
+      <el-form-item label="热销：">
+        <el-radio-group v-model="postForm.hot">
+          <el-radio :label="1">是</el-radio>
+          <el-radio :label="0">否</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="新品：">
+        <el-radio-group v-model="postForm.new">
+          <el-radio :label="1">是</el-radio>
+          <el-radio :label="0">否</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="推荐：">
+        <el-radio-group v-model="postForm.tuijian">
+          <el-radio :label="1">是</el-radio>
+          <el-radio :label="0">否</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item prop="content" style="margin-bottom: 30px;" label="详情：" :required="true">
-        <Tinymce ref="editor" v-model="postForm.content" :height="400"/>
+        <Tinymce ref="editor" v-model="postForm.content" :height="200"/>
       </el-form-item>
       <el-form-item style="text-align:center; margin-bottom: 30px;">
         <el-button type="primary" @click="onSubmit">保存</el-button>
@@ -75,11 +105,12 @@ import {
   fetchCategoryList
 } from "@/api/product";
 import { classifyList } from "@/api/classify";
+import { freightList } from "@/api/freight";
 
 const defaultForm = {
   name: "", // 商品名称
   classify: [], // 商品分类
-  show: "1", // 商品状态1：上架，0：下架
+  show: 1, // 商品状态1：上架，0：下架
   price: "", // 原价
   price_yh: "", // 一口价
   stock: "", // 库存
@@ -100,7 +131,10 @@ const defaultForm = {
     number:'',
     start_time:'',
     end_time:'',
-  }
+  },
+  tuijian:0,
+  new:0,
+  hot:0,
 };
 
 export default {
@@ -164,7 +198,8 @@ export default {
       // rule: { required: true, trigger: 'blur', validator: validateNumber},
       tempRoute: {},
       options: [],
-      classifyList: []
+      classifyList: [],
+      freight:[],
     };
   },
   created() {
@@ -176,6 +211,7 @@ export default {
     this.tempRoute = Object.assign({}, this.$route);
     this.getCategoryList();
     this.getClassifyList();
+    this.getFreightList();
   },
   methods: {
     getCategoryList() {
@@ -199,6 +235,8 @@ export default {
               url: banner[i]
             });
           }
+          this.postForm.store = [];
+          this.postForm.store = [res.merchant_class_id];
           console.log("---------", fileList);
           this.postForm.fileList = fileList;      
           this.postForm.number = res.pintuanInfo.number;
@@ -221,6 +259,11 @@ export default {
         }
         console.log("-----");
       });
+    },
+    getFreightList(){
+      freightList().then(res=>{
+        this.freight = res.data;
+      })
     },
     // 新增
     onSubmit() {

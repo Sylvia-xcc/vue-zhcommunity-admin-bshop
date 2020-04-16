@@ -254,6 +254,26 @@ export const constantRoutes = [
         name: 'StoreCashoutList',
         meta: { title: '提现管理', icon: 'cash' , noCache: true}
       },
+      {
+        path: 'store-swiper-list',
+        component: () => import('@/views/store/swiper/list'),
+        name: 'StoreSwiperList',
+        meta: { title: '广告列表', icon: 'cash' , noCache: true}
+      },
+      {
+        path: 'store-swiper-add',
+        component: () => import('@/views/store/swiper/add'),
+        name: 'StoreSwiperAdd',
+        meta: { title: '添加广告', icon: 'edit' , noCache: true},
+        hidden: true
+      },
+      {
+        path: 'store-swiper-edit/:id(\\d+)',
+        component: () => import('@/views/store/swiper/edit'),
+        name: 'StoreSwiperEdit',
+        meta: { title: '编辑广告', icon: 'edit' , noCache: true},
+        hidden: true
+      },
     ]
   },
 

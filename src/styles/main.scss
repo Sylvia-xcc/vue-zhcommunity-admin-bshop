@@ -68,6 +68,11 @@ $white: #fff;
     text-align: right;
   }
 
+  .text-cut {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
   
 .text-red, .line-red, .lines-red {
     color: $red;
