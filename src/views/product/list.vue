@@ -1,5 +1,12 @@
 <template>
   <div class="app-container">
+    <div style="margin:20px 0px;">
+            <router-link to="/product/create">
+                <el-button type="primary" >
+                    新增商品
+                </el-button>
+            </router-link>
+        </div>
     <el-table
       v-loading="isLoading"
       :data="list"
@@ -34,11 +41,11 @@
           <span>{{ scope.row.cid }}</span>
         </template>
       </el-table-column>
-      <el-table-column width="120px" label="划线价(￥)">
+      <!-- <el-table-column width="120px" label="划线价(￥)">
         <template slot-scope="scope">
           <span>{{ scope.row.price }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column width="120px" label="价格(￥)">
         <template slot-scope="scope">
           <span>{{ scope.row.price_yh }}</span>
@@ -49,10 +56,13 @@
           <span>{{ scope.row.stock }}</span>
         </template>
       </el-table-column>
-      <el-table-column class-name="status-col" label="状态" width="110">
+      <el-table-column class-name="status-col" label="状态" width="200">
         <template slot-scope="scope">
-          <span style="color:#F56C6C; font-size:12px;" v-if="scope.row.show==0">下架</span>
-          <span style="color:#67C23A; font-size:12px;" v-else>上架</span>
+          <el-tag type="danger" size="mini" v-if="scope.row.show==0">下架</el-tag>
+          <el-tag type="success" size="mini" v-else>上架</el-tag>
+          <el-tag type="warning" size="mini" v-if="scope.row.hot==1">热销</el-tag>
+          <el-tag type="warning" size="mini" v-if="scope.row.new==1">新品</el-tag>
+          <el-tag type="warning" size="mini" v-if="scope.row.tuijian==1">推荐</el-tag>
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作" width="180" fixed="right">

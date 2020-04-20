@@ -193,6 +193,15 @@ export function deliveryOrder(data) {
     data
   })
 }
+
+// 退款
+export function refundOrder(data) {
+  return request({
+    url: 'order/refundByOrder',
+    method: 'post',
+    data
+  })
+}
 // ==订单 end================================================
 
 

@@ -20,6 +20,12 @@
         </el-form-item>
       </el-form>
     </div>
+    <el-tabs v-model="activeName" @tab-click="handleClick">
+      <el-tab-pane label="用户管理" name="first"></el-tab-pane>
+      <el-tab-pane label="配置管理" name="second"></el-tab-pane>
+      <el-tab-pane label="角色管理" name="third"></el-tab-pane>
+      <el-tab-pane label="定时任务补偿" name="fourth"></el-tab-pane>
+    </el-tabs>
     <el-table v-loading="isLoading" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column align="center" label="ID" width="80">
         <template slot-scope="scope">
@@ -79,6 +85,8 @@
           </router-link>
           <el-divider direction="vertical"></el-divider>
           <el-button type="text" size="small" @click="delTap(scope.row.id)"> 删除</el-button>
+          <el-divider direction="vertical"></el-divider>
+          <el-button type="text" size="small" style="color:red;" @click="refundTap(scope.row.id)"> 退款</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -88,7 +96,7 @@
 </template>
 
 <script>
-import { listOrder, delOrder } from '@/api/product'
+import { listOrder, delOrder, refundOrder } from '@/api/product'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 export default {
@@ -122,7 +130,8 @@ export default {
         order_sn:'',
         begin_time:'',
         end_time:''
-      }
+      },
+      activeName: 'second'
     }
   },
   created() {
@@ -164,6 +173,17 @@ console.log('--------------- watch')
 
       })
     },
+    refundTap(id){
+      this.$confirm('确定要退款？').then(res => {
+        console.log('--------- 退款商品', id)
+        refundOrder({ order_id: id }).then(ress => {
+          this.$message.success('订单退款成功！')
+          this.getList()
+        })
+      }).catch(res => {
+
+      })
+    },
     onSubmit() {
       console.log('submit:', this.formInline);
       this.page = 1;
@@ -173,6 +193,9 @@ console.log('--------------- watch')
       this.$refs.formInline.resetFields();
       this.page=1;
       this.getList();
+    },
+    handleClick(tab, event) {
+      console.log(tab, event);
     }
   }
 }

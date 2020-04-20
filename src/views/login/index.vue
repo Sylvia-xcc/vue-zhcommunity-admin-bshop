@@ -47,11 +47,11 @@
 
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px; margin-top:30px;" @click.native.prevent="handleLogin">Login</el-button>
 
-      <div style="position:relative; margin-top:30px;">
-        <el-button class="thirdparty-button" style="" type="primary" @click="showDialog=true">
-          Or connect with
+      <!-- <div style="position:relative; margin-top:60px;">
+        <el-button class="thirdparty-button" style="" type="success" @click="showDialog=true">
+          <span class="wx-svg-container" ><svg-icon icon-class="wechat" class="icon" style="width:40px; height:40px;" /></span>
         </el-button>
-      </div>
+      </div> -->
     </el-form>
 
     <el-dialog :visible.sync="showDialog" width="400px">

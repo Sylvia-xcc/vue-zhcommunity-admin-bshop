@@ -25,7 +25,7 @@
         <template slot-scope="scope">
           <div><span>订单总额：</span><span>￥{{detail.price}}</span></div>
           <div><span>运费金额：</span><span>￥{{detail.express_money}}</span></div>
-          <div><span>实付款金额：</span><span style="color:red">￥{{detail.pay_money}}</span></div>
+          <div><span>实付款金额：</span><span style="color:red">￥{{detail.amount}}</span></div>
         </template>
       </el-table-column>
       <el-table-column width="120px" align="center" label="支付方式">
@@ -130,7 +130,7 @@
        <el-button type="primary" @click="onToDelivery" v-if="detail.status==20" style="margin:30px;">发货</el-button>
     </div>
 
-    <!-- <el-form ref="detail" :model="detail" label-width="100px" style="margin-top:60px;">
+    <el-form ref="detail" :model="detail" label-width="100px" style="margin-top:60px;">
       <el-row :gutter="24">
         <el-col :span="10">
           <div class="grid-content bg-purple">
@@ -166,7 +166,7 @@
         <el-button type="primary" @click="onSubmit">保存</el-button>
         <el-button @click="onReturn">返回</el-button>
       </el-form-item>
-    </el-form> -->
+    </el-form>
   </div>
 </template>
 
