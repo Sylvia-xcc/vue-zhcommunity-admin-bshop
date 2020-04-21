@@ -1,10 +1,11 @@
 <template>
-  <el-form-item :label="itemObj.attr_name+'：'">
+  <el-form-item :label="propItem.attr_name+'：'">
     <el-input
-      v-for="item in itemObj.list"
+      v-for="item in propItem.list"
       :key="item.key"
       v-model="item.value"
       style="width:150px; margin-right:10px; margin-bottom:10px;"
+      @input="input"
     />
     <el-button type="danger" size="small" icon="el-icon-delete" circle @click.prevent="delTap"/>
     <el-button type="primary" size="small" icon="el-icon-plus" circle @click.prevent="addTap"/>
@@ -12,6 +13,7 @@
 </template>
 
 <script>
+import {deepClone} from '@/utils/index';
 export default {
   props: {
     itemObj: {
@@ -25,7 +27,12 @@ export default {
       type: Object
     }
   },
-
+  data() {
+    return {
+      propItem: deepClone(this.itemObj),
+      update:false,
+    };
+  },
   // computed: {
   //   propItem: {
   //     get() {
@@ -41,30 +48,41 @@ export default {
   // watch:{
   //   propItem:{
   //     handler(){
-  //       // console.log('----AAA')
+  //       console.log('----AAA')
   //     },
   //     deep:true
   //   }
   // },
 
   methods: {
+    created(){
+      console.log('----- created')
+    },
     addTap() {
-      this.itemObj.list.push({
+      this.propItem.list.push({
         key: Date.now(),
         value: ""
       });
       this.emitinput();
     },
     delTap() {
-      if (this.itemObj.list.length <= 1) return;
-      this.itemObj.list.pop();
+      if (this.propItem.list.length <= 1) return;
+      this.propItem.list.pop();
       this.emitinput();
+    },
+
+    input(){
+      // console.log('------- AAAA', this.update)
+      if(this.update==false){
+        this.emitinput();
+      }
     },
 
     emitinput() {
       // console.log('-------- update')
-      this.itemObj = Object.assign({}, this.itemObj);
-      this.$emit("updateAttribute", this.itemObj);
+      this.update = true;
+      this.propItem = Object.assign({}, this.propItem);
+      this.$emit("updateAttribute", this.propItem);
     }
   }
 };

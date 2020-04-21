@@ -33,12 +33,6 @@
       <el-form-item style="margin-bottom: 40px;" label="库存：" prop="stock" :required="true">
         <el-input v-model="postForm.stock" placeholder="" clearable style="width:205px;"/>
       </el-form-item>
-      <el-form-item style="margin-bottom: 40px;" label="店铺中分类：" prop="store" :required="true">
-        <el-cascader v-model="postForm.store" placeholder="请选择店铺中分类" :options="classifyList" :show-all-levels="false" clearable :props="{value: 'id', label: 'name'}" />
-        <router-link :to="'/store/store-classify-add'">
-          <el-button type="text" size="mini" style="margin-left:10px;">去添加</el-button>
-        </router-link>
-      </el-form-item>
       <el-form-item style="margin-bottom: 30px;" prop="thumb" label="商品图片：" :required="true">
         <Upload v-model="postForm.thumb"/>
       </el-form-item>
@@ -63,6 +57,12 @@
           <el-button type="text" size="mini" style="margin-left:10px;">去添加</el-button>
         </router-link>
       </el-form-item>
+      <el-form-item style="margin-bottom: 40px;" label="店铺中分类：" >
+        <el-cascader v-model="postForm.store" placeholder="请选择店铺中分类" :options="classifyList" :show-all-levels="false" clearable :props="{value: 'id', label: 'name'}" />
+        <router-link :to="'/store/store-classify-add'">
+          <el-button type="text" size="mini" style="margin-left:10px;">去添加</el-button>
+        </router-link>
+      </el-form-item>
       <el-form-item label="热销：">
         <el-radio-group v-model="postForm.hot">
           <el-radio :label="1">是</el-radio>
@@ -82,7 +82,7 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item prop="content" style="margin-bottom: 30px;" label="详情：" :required="true">
-        <Tinymce ref="editor" v-model="postForm.content" :height="200"/>
+        <Tinymce ref="editor" v-model="postForm.content" :height="500"/>
       </el-form-item>
       <el-form-item style="text-align:center; margin-bottom: 30px;">
         <el-button type="primary" @click="onSubmit">保存</el-button>
@@ -106,6 +106,8 @@ import {
 } from "@/api/product";
 import { classifyList } from "@/api/classify";
 import { freightList } from "@/api/freight";
+import { deepClone } from "@/utils/index.js";
+
 
 const defaultForm = {
   name: "", // 商品名称
@@ -172,7 +174,7 @@ export default {
       }
     };
     return {
-      postForm: Object.assign({}, defaultForm),
+      postForm: deepClone(defaultForm),//Object.assign({}, defaultForm),
       loading: false,
       userListOptions: [],
       rules: {
@@ -188,9 +190,9 @@ export default {
           { required: true, message: "请输入商品划线价", trigger: "blur" }
         ],
         stock: [{ required: true, message: "请输入商品库存", trigger: "blur" }],
-        store: [
-          { required: true, message: "请选择商品店铺中分类", trigger: "change" }
-        ],
+        // store: [
+        //   { required: true, message: "请选择商品店铺中分类", trigger: "change" }
+        // ],
         content: [
           { required: true, message: "请输入商品详情", trigger: "blur" }
         ]
@@ -236,7 +238,8 @@ export default {
             });
           }
           this.postForm.store = [];
-          this.postForm.store = [res.merchant_class_id];
+          if(res.merchant_class_id>0)
+           this.postForm.store = [res.merchant_class_id];
           console.log("---------", fileList);
           this.postForm.fileList = fileList;      
           this.postForm.number = res.pintuanInfo.number;
@@ -288,12 +291,11 @@ export default {
             start_time:this.postForm.start_time,
             end_time:this.postForm.end_time,
           }
-          this.postForm.merchant_class_id = this.postForm.store[this.postForm.store.length-1];
+          this.postForm.merchant_class_id = this.postForm.store.length>0?this.postForm.store[this.postForm.store.length-1]:0;
           if(this.type==3 && this.postForm.number<=1){
             this.$message.error('拼团人数至少为2人')
             return;
           }
-
           if (this.isEdit) {
             this.editProductTap();
           } else {

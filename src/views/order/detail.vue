@@ -1,12 +1,26 @@
 <template>
   <div style="padding:30px; padding-bottom:150px;">
-    <el-steps :active="detail.status | activeFilter" align-center style="margin-top:20px;">
+
+    <el-steps :active="detail.back | backFilter" align-center  style="margin-top:20px;" v-if="detail.back>0">
       <el-step title="下单时间" :description="detail.addtime"></el-step>
-      <el-step title="付款" ></el-step>
-      <el-step title="发货" ></el-step>
-      <el-step title="收货" ></el-step>
-      <el-step title="完成" ></el-step>
+      <el-step title="退款中" ></el-step>
+      <el-step title="退款成功" :description="detail.refund_time||''"></el-step>
     </el-steps>
+    
+    <el-steps :active="detail.status | overFilter" align-center style="margin-top:20px;" v-else-if="detail.status<10">
+      <el-step title="下单时间" :description="detail.addtime"></el-step>
+      <el-step title="交易关闭" ></el-step>
+    </el-steps>
+
+    <el-steps :active="detail.status | activeFilter" align-center  style="margin-top:20px;" v-else>
+      <el-step title="下单时间" :description="detail.addtime"></el-step>
+      <el-step title="付款" :description="detail.pay_time||''"></el-step>
+      <el-step title="发货" :description="detail.delivery_time||''"></el-step>
+      <el-step title="收货" :description="detail.receive_time || ''"></el-step>
+      <el-step title="完成" :description="detail.complete_time || ''"></el-step>
+    </el-steps>
+  
+    <el-button type="danger" plain @click="changeStatus" class="margin-tb">变更状态</el-button>
 
     <div class="title" style="margin-top:20px;">基本信息</div>
     <el-table :data="[1]" border="" fit highlight-current-row style="width: 100%; margin-top:20px;">
@@ -31,10 +45,13 @@
       <el-table-column width="120px" align="center" label="支付方式">
           <el-tag size="small">{{ detail.pay_type | payFilter}}</el-tag>
       </el-table-column>
-      <el-table-column width="120px" align="center" label="交易状态">          
-          <el-tag size="small" type='danger' v-if="detail.status==10">{{ detail.status | statusFilter}}</el-tag>
-          <el-tag size="small" type='success' v-else-if="detail.status==50">{{ detail.status | statusFilter}}</el-tag>
-          <el-tag size="small" type='warning' v-else>{{ detail.status | statusFilter}}</el-tag>
+      <el-table-column width="120px" align="center" label="交易状态">      
+          <el-tag size="small" type="danger" effect="plain" v-if="detail.back==2">退款成功</el-tag>    
+          <el-tag size="small" type='danger' v-else-if="detail.status==10">{{ detail.status_desc}}</el-tag>
+          <el-tag size="small" type='success' v-else-if="detail.status==50">{{ detail.status_desc}}</el-tag>
+          <el-tag size="small" type="danger" effect="plain" v-else-if="detail.status==0">交易关闭</el-tag>
+          <el-tag size="small" type='warning' v-else>{{ detail.status_desc}}</el-tag>
+          <div v-if="detail.back==0&&detail.status==0"  class="text-xs">({{ detail.status_desc||'订单取消' }})</div>
       </el-table-column>
     </el-table>
 
@@ -123,14 +140,31 @@
         </el-table-column>
         <el-table-column min-width="100px" align="center" label="发货时间">
           <template slot-scope="scope">
-            <span >--</span>
+            <span>{{detail.delivery_time || '--'}}</span>
           </template>
         </el-table-column>
       </el-table>
        <el-button type="primary" @click="onToDelivery" v-if="detail.status==20" style="margin:30px;">发货</el-button>
     </div>
 
-    <el-form ref="detail" :model="detail" label-width="100px" style="margin-top:60px;">
+    
+    <el-dialog title="变更状态" :visible.sync="statusVisible" width="30%">
+          <span style="margin-left:30px;">状态：</span>
+          <el-select v-model="status" placeholder="请选择订单状态">
+            <el-option label="待付款" :value="10"/>
+            <!-- <el-option label="交易关闭" :value="0"/> -->
+            <el-option label="待发货" :value="20"/>
+            <el-option label="待收货" :value="30"/>
+            <el-option label="已收货" :value="40"/>
+            <el-option label="交易完成" :value="50"/>
+          </el-select>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="statusVisible = false">取 消</el-button>
+        <el-button type="primary" @click="statusConfirm">确 定</el-button>
+      </span>
+    </el-dialog>
+
+    <!-- <el-form ref="detail" :model="detail" label-width="100px" style="margin-top:60px;">
       <el-row :gutter="24">
         <el-col :span="10">
           <div class="grid-content bg-purple">
@@ -153,6 +187,7 @@
             <el-form-item label="订单状态">
               <el-select v-model="detail.status" placeholder="请选择订单状态">
                 <el-option label="待付款" :value="10"/>
+                <el-option label="交易关闭" :value="0"/>
                 <el-option label="待发货" :value="20"/>
                 <el-option label="待收货" :value="30"/>
                 <el-option label="已收货" :value="40"/>
@@ -163,10 +198,10 @@
         </el-col>
       </el-row>      
       <el-form-item style="margin-top:30px;">
-        <el-button type="primary" @click="onSubmit">保存</el-button>
+        <el-button type="danger" @click="onSubmit">变更状态</el-button>
         <el-button @click="onReturn">返回</el-button>
       </el-form-item>
-    </el-form>
+    </el-form> -->
   </div>
 </template>
 
@@ -194,7 +229,13 @@ export default {
     },
     activeFilter(status){
       return Math.floor(status/10);
-    }
+    },
+    backFilter(status){
+      return parseInt(status)+1;
+    },
+    overFilter(status){
+      return parseInt(status)+2;
+    },
   },
   data() {
     return {
@@ -207,7 +248,9 @@ export default {
       },
       kuaidi_name:'',
       kuaidi_number:'',
-      isLoading: true
+      isLoading: true,
+      statusVisible:false,
+      status:''
     };
   },
   created() {
@@ -271,7 +314,21 @@ export default {
       this.$store.dispatch("tagsView/delView", this.$route);
       // 返回上一步路由
       this.$router.go(-1);
-    }
+    },
+    changeStatus(){
+      this.statusVisible = true;
+    },
+    statusConfirm(){
+      this.statusVisible = false;
+      let data = {
+        order_id: this.detail.id,
+        status: this.status,
+      };
+      editOrder(data).then(res => {
+        this.$message.success("订单修改成功");
+        this.fetchData(this.detail.id)
+      });
+    },
   }
 };
 </script>
