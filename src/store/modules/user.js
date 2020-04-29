@@ -9,8 +9,8 @@ const state = {
   introduction: '',
   roles: [],
   uid: '',
-  cash:'',//可提现余额
-  money:'',//总盈利额
+  cash: '',//可提现余额
+  money: '',//总盈利额
 }
 
 const mutations = {
@@ -63,6 +63,8 @@ const actions = {
       getInfo(state.token).then(response => {
         const data = response;
         data.roles = ['admin'];
+        if (response && response.merchantTypeInfo.type == 2)
+          data.roles = ['restaurant'];
         data.introduction = 'Admin my ';
         data.avatar = data.avatar == '' ? 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif' : data.avatar;//'';
         const { roles, name, avatar, introduction, id, total_money, valid_money } = data
@@ -119,7 +121,7 @@ const actions = {
   loginQrcode({ commit }, token) {
     return new Promise(resolve => {
       console.log('------------- 登录成功')
-      commit('SET_TOKEN',token)
+      commit('SET_TOKEN', token)
       setToken(token)
       resolve()
     })

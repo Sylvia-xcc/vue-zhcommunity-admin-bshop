@@ -1,12 +1,10 @@
 <template>
   <div class="app-container">
     <div style="margin:20px 0px;">
-            <router-link to="/product/create">
-                <el-button type="primary" >
-                    新增商品
-                </el-button>
-            </router-link>
-        </div>
+      <router-link to="/product/create">
+        <el-button type="primary">新增商品</el-button>
+      </router-link>
+    </div>
     <el-table
       v-loading="isLoading"
       :data="list"
@@ -45,7 +43,7 @@
         <template slot-scope="scope">
           <span>{{ scope.row.price }}</span>
         </template>
-      </el-table-column> -->
+      </el-table-column>-->
       <el-table-column width="120px" label="价格(￥)">
         <template slot-scope="scope">
           <span>{{ scope.row.price_yh }}</span>
@@ -67,10 +65,10 @@
       </el-table-column>
       <el-table-column align="center" label="操作" width="180" fixed="right">
         <template slot-scope="scope">
-          <router-link :to="'/product/info/'+scope.row.id">
+          <router-link :to="'/product/info/'+scope.row.id" v-if="!roles">
             <el-button type="text" size="small">产品管理</el-button>
           </router-link>
-          <el-divider direction="vertical"></el-divider>
+          <el-divider direction="vertical" v-if="!roles"></el-divider>
           <router-link :to="'/product/edit/'+scope.row.id">
             <el-button type="text" size="small">编辑</el-button>
           </router-link>
@@ -112,10 +110,17 @@ export default {
       isLoading: true,
       listQuery: {
         page: 1,
-        count: 20,
-        type:1
+        count: 20
       }
     };
+  },
+  computed: {
+    roles() {
+      return this.$store.getters.roles.includes("restaurant");
+    },
+    type() {
+      return this.$store.getters.roles.includes("restaurant") ? 4 : 1;
+    }
   },
   created() {
     this.getList();
@@ -123,6 +128,7 @@ export default {
   methods: {
     getList() {
       this.isLoading = true;
+      this.listQuery.type = this.type;
       productList(this.listQuery).then(res => {
         this.list = res.data;
         this.total = res.total;

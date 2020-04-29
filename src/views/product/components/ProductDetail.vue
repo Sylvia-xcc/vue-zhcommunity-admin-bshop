@@ -36,10 +36,10 @@
       <el-form-item style="margin-bottom: 30px;" prop="thumb" label="商品图片：" :required="true">
         <Upload v-model="postForm.thumb"/>
       </el-form-item>
-      <el-form-item style="margin-bottom: 40px; text-align:left;" label="轮播图：">
+      <el-form-item style="margin-bottom: 40px; text-align:left;" label="轮播图：" v-if="!roles">
         <UploadFile :file-list="postForm.fileList" @uploadfile="uploadFile"/>
       </el-form-item>
-      <el-form-item style="margin-bottom: 30px;" label="视频：">
+      <el-form-item style="margin-bottom: 30px;" label="视频：" v-if="!roles">
         <VideoUpload v-model="postForm.video"/>
       </el-form-item>
       <el-form-item label="状态：">
@@ -48,7 +48,10 @@
           <el-radio :label="0">下架</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item style="margin-bottom: 30px;" label="选择快递模板：" :required="true">
+      <el-form-item label="使用规则：">
+        <el-input type="textarea" v-model="postForm.instruc" rows="4" style="width:600px;"></el-input>
+      </el-form-item>
+      <el-form-item style="margin-bottom: 30px;" label="选择快递模板：" :required="true" v-if="!roles">
         <el-select v-model="postForm.fid" placeholder="请选择">
           <el-option :value="0" label="包邮"></el-option>
           <el-option v-for="item in freight" :key="item.value" :label="item.name" :value="item.id"> </el-option>
@@ -137,6 +140,7 @@ const defaultForm = {
   tuijian:0,
   new:0,
   hot:0,
+  instruc:'',
 };
 
 export default {
@@ -149,7 +153,7 @@ export default {
     },
     type: {
       type: Number,
-      default: 1
+      default: 1//1-普通商品，2-积分商品，3-拼团，4-餐饮
     }
   },
   data() {
@@ -204,8 +208,13 @@ export default {
       freight:[],
     };
   },
+  computed:{
+    roles(){
+      return this.type==4
+    },
+  },
   created() {
-    console.log("------------- ++++++ ", this.$route.params);
+    console.log("============>>>> params ", this.$route.params.id, this.type);
     if (this.isEdit) {
       const id = this.$route.params && this.$route.params.id;
       this.fetchData(id);

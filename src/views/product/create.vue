@@ -1,5 +1,5 @@
 <template>
-  <product-detail :is-edit="false" :type="1" />
+  <product-detail :is-edit="false" :type="type" />
   <!-- <ForumTest></ForumTest> -->
 </template>
 
@@ -9,6 +9,11 @@ import ForumTest from './components/FormTest'
 
 export default {
   name: 'ProductCreate',
-  components: { ProductDetail, ForumTest }
+  components: { ProductDetail, ForumTest },
+  computed:{
+    type(){
+        return this.$store.getters.roles.includes('restaurant')?4:1;
+    }
+  }
 }
 </script>
