@@ -287,7 +287,7 @@ export const asyncRoutes = [
     path: '/restaurant',
     component: Layout,
     redirect: '/restaurant/order/list',
-    name: 'Order',
+    name: 'RestaurantOrder',
     meta: {
       roles: ['restaurant'],
       title: '订单管理',
@@ -295,13 +295,13 @@ export const asyncRoutes = [
     },
     children: [
       {
-        path: 'list',
+        path: 'restaurant-list',
         component: () => import('@/views/restaurant/order/list'),
         name: 'RestaurantOrderList',
         meta: { roles: ['restaurant'], title: '订单管理', icon: 'order', noCache: true }
       },
       {
-        path: 'detail/:id(\\d+)',
+        path: 'restaurant-detail/:id(\\d+)',
         component: () => import('@/views/restaurant/order/detail'),
         name: 'RestaurantOrderDetail',
         meta: { roles: ['restaurant'], title: '订单详情', noCache: true, activeMenu: '/restaurant/order/detail' },

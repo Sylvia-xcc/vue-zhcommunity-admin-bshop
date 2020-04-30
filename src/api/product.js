@@ -206,3 +206,41 @@ export function refundOrder(data) {
 
 
 
+// ==餐饮订单===================================================
+// 订单列表
+export function listFoodOrder(query) {
+  return request({
+    url: 'Orderfood/lists',
+    method: 'get',
+    params: query
+  })
+}
+
+// 订单详情
+export function detailFoodOrder(id) {
+  return request({
+    url: 'Orderfood/detail',
+    method: 'get',
+    params: { id }
+  })
+}
+
+// 删除订单
+export function delFoodOrder(data) {
+  return request({
+    url: 'Orderfood/del',
+    method: 'post',
+    data
+  })
+}
+
+// 退款
+export function refundFoodOrder(data) {
+  return request({
+    url: 'Orderfood/refund',
+    method: 'post',
+    data
+  })
+}
+
+// ==规格属性 end============================================
