@@ -202,6 +202,14 @@ export function refundOrder(data) {
     data
   })
 }
+
+// 快递公司列表
+export function listExpress() {
+  return request({
+    url: 'express/lists',
+    method: 'get',
+  })
+}
 // ==订单 end================================================
 
 

@@ -13,7 +13,7 @@
         <el-input
           ref="mobile"
           v-model="loginForm.mobile"
-          placeholder="Mobile"
+          placeholder="手机号"
           name="mobile"
           type="text"
           tabindex="1"
@@ -31,7 +31,7 @@
             ref="password"
             v-model="loginForm.password"
             :type="passwordType"
-            placeholder="Password"
+            placeholder="密码"
             name="password"
             tabindex="2"
             autocomplete="on"
@@ -45,7 +45,7 @@
         </el-form-item>
       </el-tooltip>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px; margin-top:30px;" @click.native.prevent="handleLogin">Login</el-button>
+      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px; margin-top:30px;" @click.native.prevent="handleLogin">登录</el-button>
 
       <!-- <div style="position:relative; margin-top:60px;">
         <el-button class="thirdparty-button" style="" type="success" @click="showDialog=true">
@@ -57,14 +57,13 @@
     <el-dialog :visible.sync="showDialog" width="400px">
       <wechat-login />
     </el-dialog>
-  </div>
+    </div>
 </template>
 
 <script>
 import { validMobile } from '@/utils/validate'
 import SocialSign from './components/SocialSignin'
 import WechatLogin from './components/WechatLogin'
-
 
 export default {
   name: 'Login',
@@ -79,15 +78,15 @@ export default {
     }
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
-        callback(new Error('The password can not be less than 6 digits'))
+        callback(new Error('密码长度不能低于6位字符'))
       } else {
         callback()
       }
     }
     return {
       loginForm: {
-        mobile: '18666888668',
-        password: '888888'
+        mobile: '',
+        password: ''
       },
       loginRules: {
         mobile: [{ required: true, trigger: 'blur', validator: validateMobile }],
@@ -147,10 +146,10 @@ export default {
         if (valid) {
           this.loading = true
           this.$store.dispatch('user/login', this.loginForm).then(() => {
-              console.log('----- success login')
-              this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
-              this.loading = false
-            })
+            console.log('----- success login')
+            this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+            this.loading = false
+          })
             .catch(() => {
               this.loading = false
             })
@@ -212,27 +211,27 @@ $cursor: #fff;
     width: 85%;
 
     input {
-      background: transparent;
+      background:transparent;
       border: 0px;
       -webkit-appearance: none;
       border-radius: 0px;
       padding: 12px 5px 12px 15px;
-      color: $light_gray;
+      color: $bg;
       height: 47px;
       caret-color: $cursor;
 
       &:-webkit-autofill {
-        box-shadow: 0 0 0px 1000px $bg inset !important;
-        -webkit-text-fill-color: $cursor !important;
+        box-shadow: 0 0 0px 1000px $light_gray inset !important;
+        // -webkit-text-fill-color: $cursor !important;
       }
     }
   }
 
   .el-form-item {
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    background: #fff;//rgba(0, 0, 0, 0.1);
     border-radius: 5px;
-    color: #454545;
+    color:#454545;
   }
 }
 </style>
@@ -245,9 +244,9 @@ $light_gray:#eee;
 .login-container {
   min-height: 100%;
   width: 100%;
-  background-color: $bg;
+  // background-color: $bg;
   overflow: hidden;
-
+  background-image: url('http://image.fengzhankeji.com//uploads/20200507/3742ebc8de6d4e5c25eea393bf4c4b25.png');
   .login-form {
     position: relative;
     width: 520px;
@@ -255,6 +254,12 @@ $light_gray:#eee;
     padding: 160px 35px 0;
     margin: 0 auto;
     overflow: hidden;
+    background-color:#fff;
+    margin-top:150px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    box-shadow: 2px 2px 12px #ccc;
   }
 
   .tips {
@@ -282,7 +287,7 @@ $light_gray:#eee;
 
     .title {
       font-size: 26px;
-      color: $light_gray;
+      color: #000;
       margin: 0px auto 40px auto;
       text-align: center;
       font-weight: bold;

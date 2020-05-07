@@ -11,7 +11,7 @@ export function login(data) {
 export function getInfo(token) {
   return request({
     url: 'user/getInfo',
-    method: 'get',
+    method: 'get'
   })
 }
 
@@ -26,6 +26,15 @@ export function wechatLogin(page) {
   return request({
     url: 'login/getQrcode',
     method: 'get',
-    params:{page}
+    params: { page }
+  })
+}
+
+// ===重置密码======================================
+export function resetPassword(data) {
+  return request({
+    url: 'user/setPass',
+    method: 'post',
+    data
   })
 }

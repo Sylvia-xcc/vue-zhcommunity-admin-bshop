@@ -8,17 +8,17 @@
         <el-radio-group v-model="form.valuation_type">
           <el-radio :label="1">件数</el-radio>
           <el-radio :label="2">重量</el-radio>
-          <el-radio :label="3">体积</el-radio>
+          <!-- <el-radio :label="3">体积</el-radio> -->
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="运送方式" :required="true">
+      <!-- <el-form-item label="运送方式" :required="true">
         <el-radio-group v-model="form.transport_type">
           <el-radio :label="1">快递</el-radio>
           <el-radio :label="2">物流</el-radio>
           <el-radio :label="3">EMS</el-radio>
           <el-radio :label="3">平邮</el-radio>
         </el-radio-group>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="派送地区" :required="true">
         <el-button type="warning" size="mini" @click="dialogRegionVisible = true">增加派送地址</el-button>
         <span style="color:#909399;">未设置运费的地区，为不派送范围</span>
@@ -47,7 +47,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="date" label="首件(个) / 首重(kg) / 首体积(m³)" width="200">
+        <el-table-column prop="date" :label="form.valuation_type==1?'首件(个)':' 首重(kg)' " width="200">
           <template slot-scope="scope">
             <el-input v-model="scope.row.first_num"></el-input>
           </template>
@@ -57,7 +57,7 @@
             <el-input v-model="scope.row.first_price"></el-input>
           </template>
         </el-table-column>
-        <el-table-column prop="date" label="续件(个) / 续重(kg) / 续体积(m³)" width="200">
+        <el-table-column prop="date" :label="form.valuation_type==1?'续件(个)': '续重(kg)' " width="200">
           <template slot-scope="scope">
             <el-input v-model="scope.row.second_num"></el-input>
           </template>

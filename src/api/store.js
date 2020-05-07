@@ -4,7 +4,7 @@ import request from '@/utils/request'
 export function storeDetail() {
   return request({
     url: 'user/getExt',
-    method: 'get',
+    method: 'get'
   })
 }
 
@@ -22,7 +22,7 @@ export function swiperList(query) {
   return request({
     url: 'merchantbanner/lists',
     method: 'get',
-    params:query,
+    params: query
   })
 }
 
@@ -31,12 +31,11 @@ export function swiperDetail(id) {
   return request({
     url: 'merchantbanner/detail',
     method: 'get',
-    params:{id},
+    params: { id }
   })
 }
 
-
-//新增广告
+// 新增广告
 export function swiperAdd(data) {
   return request({
     url: 'merchantbanner/add',
@@ -45,7 +44,7 @@ export function swiperAdd(data) {
   })
 }
 
-//编辑广告
+// 编辑广告
 export function swiperEdit(data) {
   return request({
     url: 'merchantbanner/edit',

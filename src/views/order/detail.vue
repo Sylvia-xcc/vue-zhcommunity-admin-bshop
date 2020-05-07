@@ -122,7 +122,14 @@
       <el-table :data="[1]" border="" fit highlight-current-row style="width: 100%; margin-top:20px;">
         <el-table-column align="center" label="物流公司" width="300">
           <template slot-scope="scope">
-            <el-input v-if="detail.status==20" v-model="kuaidi_name"/>
+            <el-select v-model="kuaidi_id" placeholder="请选择快递公司" v-if="detail.status==20">
+              <el-option
+                v-for="item in expressList"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id">
+              </el-option>
+            </el-select>
             <span v-else>{{ detail.kuaidi_name }}</span>
           </template>
         </el-table-column>
@@ -147,6 +154,9 @@
        <el-button type="primary" @click="onToDelivery" v-if="detail.status==20" style="margin:30px;">发货</el-button>
     </div>
 
+    <el-link v-if="detail.status>20" style="margin:30px;" :underline="false" :href="pathUrl" target="_blank"><el-button type="primary">快递查询</el-button> </el-link>
+    
+
     
     <el-dialog title="变更状态" :visible.sync="statusVisible" width="30%">
           <span style="margin-left:30px;">状态：</span>
@@ -163,50 +173,11 @@
         <el-button type="primary" @click="statusConfirm">确 定</el-button>
       </span>
     </el-dialog>
-
-    <!-- <el-form ref="detail" :model="detail" label-width="100px" style="margin-top:60px;">
-      <el-row :gutter="24">
-        <el-col :span="10">
-          <div class="grid-content bg-purple">
-            <el-form-item label="快递单号">
-              <el-input v-model="detail.kuaidi_number"/>
-            </el-form-item>
-          </div>
-        </el-col>
-        <el-col :span="10">
-          <div class="grid-content bg-purple">
-            <el-form-item label="快递名称">
-              <el-input v-model="detail.kuaidi_name"/>
-            </el-form-item>
-          </div>
-        </el-col>
-      </el-row>      
-      <el-row :gutter="24">
-        <el-col :span="10">
-          <div class="grid-content bg-purple">
-            <el-form-item label="订单状态">
-              <el-select v-model="detail.status" placeholder="请选择订单状态">
-                <el-option label="待付款" :value="10"/>
-                <el-option label="交易关闭" :value="0"/>
-                <el-option label="待发货" :value="20"/>
-                <el-option label="待收货" :value="30"/>
-                <el-option label="已收货" :value="40"/>
-                <el-option label="交易完成" :value="50"/>
-              </el-select>
-            </el-form-item>
-          </div>
-        </el-col>
-      </el-row>      
-      <el-form-item style="margin-top:30px;">
-        <el-button type="danger" @click="onSubmit">变更状态</el-button>
-        <el-button @click="onReturn">返回</el-button>
-      </el-form-item>
-    </el-form> -->
   </div>
 </template>
 
 <script>
-import { detailOrder, editOrder, deliveryOrder } from "@/api/product";
+import { detailOrder, editOrder, deliveryOrder, listExpress } from "@/api/product";
 export default {
   name: "ProductOrderDetail",
   filters: {
@@ -237,6 +208,11 @@ export default {
       return parseInt(status)+2;
     },
   },
+  computed:{
+        pathUrl: function () {
+            return 'https://www.kuaidi100.com/chaxun?com='+this.detail.kuaidi_info.code+'&nu='+this.detail.kuaidi_number
+        }
+  },
   data() {
     return {
       detail: {
@@ -246,16 +222,19 @@ export default {
       user: {
         nickname: ""
       },
+      kuaidi_id:'',
       kuaidi_name:'',
       kuaidi_number:'',
       isLoading: true,
       statusVisible:false,
-      status:''
+      status:'',
+      expressList:[],
     };
   },
   created() {
     const id = this.$route.params && this.$route.params.id;
     this.fetchData(id);
+    this.loadExpressList();
   },
   methods: {
     fetchData(id) {
@@ -275,6 +254,16 @@ export default {
         });
     },
 
+    loadExpressList(){
+      listExpress().then(res=>{
+        this.expressList = res.list;
+      })
+    },
+
+    seeTap(){
+      window.location.href = 'https://www.kuaidi100.com/chaxun?com='+this.detail.kuaidi_info.code+'&nu='+this.detail.kuaidi_number
+    },
+
     onSubmit() {
       console.log("----submit:", this.detail);
       let data = {
@@ -289,8 +278,9 @@ export default {
     },
 
     onToDelivery(){
-      if(this.kuaidi_name==''){
-        this.$message.warning('请填写物流公司');
+      console.log('------ 物流：', this.kuaidi_id, this.kuaidi_number)
+      if(this.kuaidi_id<=0){
+        this.$message.warning('请选择物流公司');
         return;
       }
       if(this.kuaidi_number==''){
@@ -299,7 +289,7 @@ export default {
       }
       let data = {
         order_id: this.detail.id,
-        kuaidi_name:this.kuaidi_name,
+        kuaidi_id:this.kuaidi_id,
         kuaidi_number:this.kuaidi_number,
         status:30
       }

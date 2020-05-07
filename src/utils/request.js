@@ -5,7 +5,7 @@ import { getToken } from '@/utils/auth'
 
 // create an axios instance
 const service = axios.create({
-  baseURL: 'https://bshop.fengzhankeji.com/bshop/', //process.env.VUE_APP_BASE_API, // url = base url + request url
+  baseURL: 'https://bshop.fengzhankeji.com/bshop/', // process.env.VUE_APP_BASE_API, // url = base url + request url
   // withCredentials: true, // send cookies when cross-domain requests
   timeout: 5000 // request timeout
 })
@@ -19,7 +19,7 @@ service.interceptors.request.use(
       // let each request carry token
       // ['X-Token'] is a custom headers key
       // please modify it according to the actual situation
-      config.headers['token'] = getToken();
+      config.headers['token'] = getToken()
     }
     return config
   },
@@ -73,10 +73,10 @@ service.interceptors.response.use(
   },
   error => {
     console.log('err：' + error) // for debug
-    let msg = error.msg || error;
+    let msg = error.msg || error
     //  1.判断请求超时
     if (error.indexOf('timeout') !== -1) {
-      msg = '请求超时';
+      msg = '请求超时'
     }
     console.log('---------', msg)
     Message({

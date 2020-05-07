@@ -62,7 +62,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       getInfo(state.token).then(response => {
         const data = response;
-        data.roles = ['admin'];
+        data.roles = ['shop'];
         if (response && response.merchantTypeInfo.type == 2)
           data.roles = ['restaurant'];
         data.introduction = 'Admin my ';
