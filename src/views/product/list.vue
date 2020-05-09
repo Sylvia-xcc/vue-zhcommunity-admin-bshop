@@ -74,6 +74,10 @@
           </router-link>
           <el-divider direction="vertical"></el-divider>
           <el-button type="text" size="small" @click="delTap(scope.row.id)">删除</el-button>
+          <!-- <el-divider direction="vertical"></el-divider>
+          <router-link :to="'/product/product-comment-list/'+scope.row.id">
+            <el-button type="text" size="small">评价</el-button>
+          </router-link> -->
         </template>
       </el-table-column>
     </el-table>

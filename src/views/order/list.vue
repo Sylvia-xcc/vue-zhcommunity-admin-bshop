@@ -17,18 +17,19 @@
         <el-form-item label="订单编号" prop="order_sn">
           <el-input v-model="formInline.order_sn" placeholder="订单编号"/>
         </el-form-item>
-        <!-- <el-form-item label="开始时间"  prop="begin_time">
+        <el-form-item label="开始时间"  prop="begin_time">
           <el-date-picker type="datetime" placeholder="选择开始时间" value-format="yyyy-MM-dd HH:mm:ss" v-model="formInline.begin_time" ></el-date-picker>
         </el-form-item>
         <el-form-item label="结束时间" style="margin-right:50px;" prop="end_time">
             <el-date-picker type="datetime" placeholder="选择结束时间" value-format="yyyy-MM-dd HH:mm:ss" v-model="formInline.end_time"></el-date-picker>
-        </el-form-item>-->
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit">查询</el-button>
           <el-button type="primary" @click="onReset">清空</el-button>
         </el-form-item>
       </el-form>
     </div>
+    <el-button type="primary"  :disabled="multipleSelection.length<=0" class="margin-bottom-xs" @click="dialogVisible2=true">打印</el-button>
     <el-table
       v-loading="isLoading"
       :data="list"
@@ -36,7 +37,12 @@
       fit
       highlight-current-row
       style="width: 100%"
+      @selection-change="handleSelectionChange"
     >
+      <el-table-column
+        type="selection"
+        width="55">
+      </el-table-column>
       <el-table-column align="center" label="ID" width="80">
         <template slot-scope="scope">
           <span>{{ scope.row.id }}</span>
@@ -172,11 +178,11 @@
             <div style="text-align:left; width:10%; min-height:40px; font-weight:bold; line-height:40px; border-right:1px solid #eef1f5; padding-left:10px;">购买数量</div>
             <div style="text-align:left; width:10%; min-height:40px; font-weight:bold; line-height:40px; padding-left:10px;">总价</div>
           </div> 
-          <div style="display:flex; justify-content: space-between; border-top:1px solid #eef1f5;" v-for="item in detail.productList">
+          <div style="display:flex; justify-content: space-between; border-top:1px solid #eef1f5;" v-for="item in detail.productList" :key="item.id">
             <div style=" width:8%; display:flex; align-items: center;  min-height:80px;  border-right:1px solid #eef1f5; padding-left:10px;">{{ item.id }}</div>
             <div style=" width:42%; display:flex; align-items: center;  min-height:80px;  border-right:1px solid #eef1f5; padding:0px 10px;">
               <div style="display:flex; align-items: center;">
-                <img :src="item.pro_thumb" mode="scaleToFill" style="width: 50px; height: 50px; border-radius:4px; "></img>
+                <img :src="item.pro_thumb" mode="scaleToFill" style="width: 50px; height: 50px; border-radius:4px; " />
                 <span style="padding-left:10px; flex:1;">{{ item.pro_name }}</span>
               </div>
             </div>
@@ -237,6 +243,64 @@
         <el-button type="primary" @click="printpage">打印订单信息</el-button>
       </span>
     </el-dialog>
+
+    <el-dialog title="打印订单列表预览" :visible.sync="dialogVisible2" width="90%">
+      <div id="print-list-context" >
+        <div style=" margin-top:20px;">
+          <div style="display:flex; justify-content: space-between; border:1px solid #eef1f5;">
+            <div style="text-align:center; width:45%; min-height:40px; font-weight:bold; line-height:40px; ">商品信息</div>
+            <div style="text-align:center; width:15%; min-height:40px; font-weight:bold; line-height:40px; ">单价/数量</div>
+            <div style="text-align:center; width:15%; min-height:40px; font-weight:bold; line-height:40px; ">实付款</div>
+            <div style="text-align:center; width:15%; min-height:40px; font-weight:bold; line-height:40px; ">买家</div>
+            <div style="text-align:center; width:10%; min-height:40px; font-weight:bold; line-height:40px;">交易状态</div>
+          </div> 
+
+          <div v-for="item in multipleSelection" :key="item.id" style="margin-top:20px; border:1px solid #eef1f5;">
+            <div class="" style="display:flex; align-items: center; min-height:40px; border-bottom:1px solid #eef1f5; padding:0px 10px;">
+              <span>{{item.addtime}}</span>
+              <span style="padding-left:20px">订单号：{{item.order_sn}}</span>
+            </div>
+            <div class="" style="display:flex; justify-content: space-between; min-height:60px;  ">
+              <div style="width:60%; border-right:1px solid #eef1f5;">
+                  <div v-for="iitem in item.productList" :key="iitem.id" style="width:100%; display:flex; justify-content: space-between; align-items: center; border-bottom:1px solid #eef1f5;">
+                      <div class="" style="width:75%; display:flex; align-items: center; border-right:1px solid #eef1f5; padding:10px;">
+                        <img :src="iitem.pro_thumb" mode="scaleToFill" style="width:60px; height:60px; radius:6px;" />
+                        <div style="padding-left:10px; flex:1;">
+                          <span>{{iitem.pro_name}}</span>
+                          <div style="font-size:14px; color:#999; padding-top:5px;">{{iitem.pro_buff}}</div>
+                        </div>
+                      </div>
+                      <div style="width:25%; display:flex; justify-content: center; align-items: center; flex-direction: column;">
+                        <div>￥{{ iitem.pro_price }}</div>
+                        <div style="padding-top:5px;">x{{ iitem.pro_num }}</div>
+                      </div>
+                  </div>
+              </div>
+              <div style="width:15%; display:flex; justify-content: center; align-items: center; flex-direction: column; border-right:1px solid #eef1f5;">
+                <div>￥{{item.price}}</div>
+                <div style="font-size:12px; padding-top:5px;">（含运费：￥{{ item.express_money }}）</div>
+              </div>
+              <div style="width:15%; display:flex; justify-content: center; align-items: center; flex-direction: column; border-right:1px solid #eef1f5;">
+                <div>{{ item.nickname }}</div>
+                <div style="font-size:12px; padding-top:5px;">(用户id：{{ item.uid }})</div>
+              </div>
+              <div style="width:10%; display:flex; justify-content: center; align-items: center; flex-direction: column; min-height:40px;">
+                <div v-if="item.back==2" style="color:#ff4949">退款成功</div>    
+                <div v-else-if="item.status==10" style="color:#ff4949">{{ item.status_desc}}</div>  
+                <div v-else-if="item.status==50" style="color:#13ce66">{{ item.status_desc}}</div>  
+                <div v-else-if="item.status==0" style="color:#ff4949;">交易关闭</div>  
+                <div v-else style="color:#ffba00;">{{ item.status_desc}}</div>  
+                <div v-if="item.back==0 && item.status==0"  style="font-size:12px;padding-top:5px;">({{ item.status_desc||'订单取消' }})</div>
+              </div>
+            </div> 
+          </div>          
+        </div>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible2 = false">取 消</el-button>
+        <el-button type="primary" @click="printpage2">打印订单列表信息</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -278,7 +342,9 @@ export default {
       },
       activeName: "60",
       dialogVisible: false,
-      detail: null
+      dialogVisible2:false,
+      detail: null,
+      multipleSelection:[]
     };
   },
   watch() {
@@ -351,12 +417,12 @@ export default {
 
     printpage() {
       let newWindow = window.open("_blank"); //打开新窗口
-      console.log("-", newWindow);
       let codestr = document.getElementById("print-context").innerHTML; //获取需要生成pdf页面的div代码
       newWindow.document.write(codestr); //向文档写入HTML表达式或者JavaScript代码
-      newWindow.document.style = document.style;
       newWindow.document.close(); //关闭document的输出流, 显示选定的数据
-      newWindow.print(); //打印当前窗口
+      newWindow.onload=function(){
+        newWindow.print(); //打印当前窗口
+      }
 
       // window.print();
     },
@@ -374,7 +440,22 @@ export default {
     handleClick(tab, event) {
       this.page = 1;
       this.getList();
-    }
+    },
+    handleSelectionChange(val){
+      console.log('-------- checkbox', val)
+      this.multipleSelection=val;
+    },
+    printpage2() {
+      let newWindow = window.open("_blank"); //打开新窗口
+      let codestr = document.getElementById("print-list-context").innerHTML; //获取需要生成pdf页面的div代码
+      // console.log('------', codestr)
+      newWindow.document.write(codestr); //向文档写入HTML表达式或者JavaScript代码
+      newWindow.document.close(); //关闭document的输出流, 显示选定的数据
+      // newWindow.print(); //打印当前窗口
+      newWindow.onload=function(){
+        newWindow.print(); //打印当前窗口
+      }
+    },
   }
 };
 </script>

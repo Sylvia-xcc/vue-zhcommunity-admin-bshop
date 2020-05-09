@@ -17,6 +17,22 @@ $ghostWhite: #f1f1f1;
 $white: #fff;
 
 
+.round {
+  border-radius: 5000px;
+}
+
+.radius {
+  border-radius: 6px;
+}
+
+.pr{
+  position: relative;
+}
+
+.pa{
+  position: absolute;
+}
+
 /* ==================
           文本
  ==================== */
@@ -133,6 +149,84 @@ $white: #fff;
   .text-white, .line-white, .lines-white {
     color: $white;
   }
+
+
+  
+.bg-red {
+  background-color: $red;
+  color: $white;
+}
+
+.bg-orange {
+  background-color: $orange;
+  color: $white;
+}
+
+.bg-yellow {
+  background-color: $yellow;
+  color: $black;
+}
+
+.bg-olive {
+  background-color: $olive;
+  color: $white;
+}
+
+.bg-green {
+  background-color: $green;
+  color: $white;
+}
+
+.bg-cyan {
+  background-color: $cyan;
+  color: $white;
+}
+
+.bg-blue {
+  background-color: $blue;
+  color: $white;
+}
+
+.bg-purple {
+  background-color: $purple;
+  color: $white;
+}
+
+.bg-mauve {
+  background-color: $mauve;
+  color: $white;
+}
+
+.bg-pink {
+  background-color: $pink;
+  color: $white;
+}
+
+.bg-brown {
+  background-color: $brown;
+  color: $white;
+}
+
+.bg-grey {
+  background-color: $grey;
+  color: $white;
+}
+
+.bg-gray {
+  background-color: #f0f0f0;
+  color: $black;
+}
+
+.bg-black {
+  background-color: $black;
+  color: $white;
+}
+
+.bg-white {
+  background-color: $white;
+  color: $darkGray;
+}
+
 
   
 /* ==================

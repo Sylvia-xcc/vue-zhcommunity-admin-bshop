@@ -10,9 +10,10 @@
             <el-form-item label="商品id">
                 <el-select v-model="form.goods_id" filterable placeholder="请选择">
                     <el-option v-for="item in goodsList" :key="item.id" :label="item.id" :value="item.id" >
-                        <div class="flex">
+                        <div class="flex" style="height:100px;">
                             <div class="" style="width:60px;">{{ item.id }}</div>
-                            <div class="text-cut" style="color: #8492a6; font-size: 13px; width:500px">{{ item.name }}</div>
+                            <el-image style="width: 50px; height: 50px; border-radius:6px;" :src="item.thumb" fit="fit"></el-image>
+                            <div class="text-cut" style="color: #8492a6; font-size: 13px; width:500px; margin-left:10px;">{{ item.name }}</div>
                         </div>
                     </el-option>
                 </el-select>
@@ -113,5 +114,11 @@ export default {
 <style lang="scss">
 .el-upload {
   text-align: left !important;
+}
+
+.el-select-dropdown__item{
+  height: 50px;
+  line-height: 50px;
+  margin-bottom:8px;
 }
 </style>

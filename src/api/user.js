@@ -38,3 +38,12 @@ export function resetPassword(data) {
     data
   })
 }
+
+// 用户列表
+export function shopUserList(query) {
+  return request({
+    url: 'Shopuser/lists',
+    method: 'get',
+    params: query
+  })
+}

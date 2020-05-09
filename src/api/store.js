@@ -52,3 +52,32 @@ export function swiperEdit(data) {
     data
   })
 }
+
+// ===成员管理======================================
+// 核销列表
+export function merchantsverifyList() {
+  return request({
+    url: 'Merchantsverify/lists',
+    method: 'get',
+  })
+}
+
+// 绑定用户-核销
+export function merchantsverifyAdd(data) {
+  return request({
+    url: 'Merchantsverify/add',
+    method: 'post',
+    data
+  })
+}
+
+// 解除绑定用户-核销
+export function merchantsverifyDel(data) {
+  return request({
+    url: 'Merchantsverify/del',
+    method: 'post',
+    data
+  })
+}
+
+

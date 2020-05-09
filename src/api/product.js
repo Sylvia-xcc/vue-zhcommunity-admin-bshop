@@ -251,4 +251,36 @@ export function refundFoodOrder(data) {
   })
 }
 
-// ==规格属性 end============================================
+// ==餐饮订单 end============================================
+
+
+
+// ==商品评价===================================================
+// 评价列表
+export function commentList(query) {
+  return request({
+    url: 'Productcomment/lists',
+    method: 'get',
+    params: query
+  })
+}
+
+// 评价详情
+export function commentDetail(id) {
+  return request({
+    url: 'Productcomment/detail',
+    method: 'get',
+    params: { id }
+  })
+}
+
+// 删除评论
+export function commentDel(data) {
+  return request({
+    url: 'Productcomment/del',
+    method: 'post',
+    data
+  })
+}
+
+// ==商品评价 end============================================

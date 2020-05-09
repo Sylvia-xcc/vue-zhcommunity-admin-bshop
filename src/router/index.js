@@ -78,7 +78,7 @@ export const constantRoutes = [
       }
     ]
   },
-  
+
 
   // {
   //   path: '/assemble',
@@ -152,20 +152,20 @@ export const asyncRoutes = [
         path: 'list',
         component: () => import('@/views/product/list'),
         name: 'ProductList',
-        meta: {  title: '商品列表', icon: 'list', noCache: true }
+        meta: { title: '商品列表', icon: 'list', noCache: true }
       },
       {
         path: 'create',
         component: () => import('@/views/product/create'),
         name: 'ProductCreate',
-        meta: {  title: '商品添加', icon: 'edit' },
+        meta: { title: '商品添加', icon: 'edit' },
         hidden: true
       },
       {
         path: 'edit/:id(\\d+)',
         component: () => import('@/views/product/edit'),
         name: 'ProductEdit',
-        meta: {  title: '编辑商品', noCache: true, activeMenu: '/product/list' },
+        meta: { title: '编辑商品', noCache: true, activeMenu: '/product/list' },
         hidden: true
       },
       {
@@ -214,13 +214,20 @@ export const asyncRoutes = [
         path: 'store-classify-list',
         component: () => import('@/views/store/classify/list'),
         name: 'StoreClassifyList',
-        meta: { title: '商品分类', icon: 'classify' , noCache: true}
+        meta: { title: '商品分类', icon: 'classify', noCache: true }
       },
       {
         path: 'store-classify-add',
         component: () => import('@/views/store/classify/add'),
         name: 'StoreClassifyAdd',
-        meta: { title: '添加商品分类', icon: 'edit' , noCache: true},
+        meta: { title: '添加商品分类', icon: 'edit', noCache: true },
+        hidden: true
+      },
+      {
+        path: 'product-comment-list/:id(\\d+)',
+        component: () => import('@/views/product/comment/list'),
+        name: 'ProductCommentList',
+        meta: { title: '评价列表', icon: 'classify', noCache: true },
         hidden: true
       },
     ]
@@ -272,7 +279,7 @@ export const asyncRoutes = [
         path: 'freight-add',
         component: () => import('@/views/freight/add'),
         name: 'FreightAdd',
-        meta: { roles: ['shop'], title: '添加模板', icon: 'edit' , noCache: true}
+        meta: { roles: ['shop'], title: '添加模板', icon: 'edit', noCache: true }
       },
       {
         path: 'freight-edit/:id(\\d+)',
@@ -329,40 +336,46 @@ export const asyncRoutes = [
         path: 'store-classify-edit/:id(\\d+)',
         component: () => import('@/views/store/classify/edit'),
         name: 'StoreClassifyEdit',
-        meta: { title: '编辑商品分类', icon: 'edit' , noCache: true},
+        meta: { title: '编辑商品分类', icon: 'edit', noCache: true },
         hidden: true
       },
       {
         path: 'store-cashout-list',
         component: () => import('@/views/store/cashout/list'),
         name: 'StoreCashoutList',
-        meta: { title: '提现管理', icon: 'cash' , noCache: true}
+        meta: { title: '提现管理', icon: 'cash', noCache: true }
       },
       {
         path: 'store-swiper-list',
         component: () => import('@/views/store/swiper/list'),
         name: 'StoreSwiperList',
-        meta: { title: '广告列表', icon: 'list' , noCache: true}
+        meta: { title: '广告列表', icon: 'list', noCache: true }
       },
       {
         path: 'store-swiper-add',
         component: () => import('@/views/store/swiper/add'),
         name: 'StoreSwiperAdd',
-        meta: { title: '添加广告', icon: 'list' , noCache: true},
+        meta: { title: '添加广告', icon: 'list', noCache: true },
         hidden: true
       },
       {
         path: 'store-swiper-edit/:id(\\d+)',
         component: () => import('@/views/store/swiper/edit'),
         name: 'StoreSwiperEdit',
-        meta: { title: '编辑广告', icon: 'list' , noCache: true},
+        meta: { title: '编辑广告', icon: 'list', noCache: true },
         hidden: true
       },
       {
         path: 'store-password',
         component: () => import('@/views/store/password'),
         name: 'StorePassword',
-        meta: { title: '重置密码', icon: 'password' , noCache: true}
+        meta: { title: '重置密码', icon: 'password', noCache: true }
+      }, 
+      {
+        path: 'store-member',
+        component: () => import('@/views/store/member'),
+        name: 'StoreMember',
+        meta: { title: '成员管理', icon: 'user', noCache: true }
       },
     ]
   },
@@ -379,7 +392,7 @@ export const asyncRoutes = [
   //     }
   //   ]
   // },
-  
+
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
