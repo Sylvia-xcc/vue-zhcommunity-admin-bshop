@@ -26,9 +26,9 @@
       <el-form-item style="margin-bottom: 40px; text-align:left;" label="店铺图片：">
         <UploadFile :file-list="form.fileList" @uploadfile="uploadFile"/>
       </el-form-item>
-      <el-form-item prop="content" style="margin-bottom: 30px;" label="商家资质：" >
+      <!-- <el-form-item prop="content" style="margin-bottom: 30px;" label="商家资质：" >
         <Tinymce ref="editor" v-model="form.aptitude" :height="200"/>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item>
         <el-button type="primary" @click="submitForm('form')">保存</el-button>
       </el-form-item>
